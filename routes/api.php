@@ -35,13 +35,14 @@ Route::middleware('auth:api')->group(function () {
 
     Route::get('product/detail/{id}', [ProductController::class, 'detailProduct']);
 
-    Route::get('profile/alamat', [UserController::class, 'getAlamat']);
+    Route::get('profile/alamat', [UserController::class, 'getAddress']);
 
     Route::post('cart/{id}', [CartController::class, 'store']);
     Route::get('cart', [CartController::class, 'cart']);
 
     // Route::get('pembayaran', [TransaksiController::class, 'pembayaran']);
     Route::get('beli-langsung', [TransaksiController::class, 'beli']);
+    Route::post('bayar', [TransaksiController::class, 'bayar']);
     Route::middleware('admin')->group(function () {
         Route::post('product/tambah-product', [ProductController::class, 'store']);
     });
