@@ -75,14 +75,4 @@ class UserController extends Controller
             'token'   => $token
         ], 200);
     }
-
-    public function getAddress()
-    {
-        // $alamat = Alamat::where('id', 2)->first()->user;
-        $data = Auth::user()->alamat;
-        return response()->json([
-            'success' => true,
-            'data alamat' => $data,
-        ], 200);
-    }
 }

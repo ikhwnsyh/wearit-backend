@@ -41,4 +41,50 @@ class TransaksiController extends Controller
             'success' => false,
         ], 422);
     }
+
+    public function allTransaction()
+    {
+        $allTransaction = Transaksi::get();
+        if ($allTransaction->isNotEmpty()) {
+            return response()->json([
+                'success' => true,
+                'data_seluruh_transaksi' => $allTransaction,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => "Data transaksi kosong. tidak ada transaksi"
+            ], 200);
+        }
+    }
+
+    public function transactionWaitToApprove($id)
+    {
+        $waitToApprove = Transaksi::where('status_id', $id)->get();
+    }
+
+    public function transactionWaitToSend($id)
+    {
+        $waitToSend = Transaksi::where('status_id', $id)->get();
+    }
+    public function approveTransaction($id)
+    {
+        Transaksi::where('id', $id)->update([
+            'status_id' => 2
+        ]);
+    }
+
+    public function rejectTransaction($id)
+    {
+        Transaksi::where('id', $id)->update([
+            'status_id' => 4
+        ]);
+    }
+
+    public function onGoing($id)
+    {
+        Transaksi::where('id', $id)->update([
+            'status_id' => 3
+        ]);
+    }
 }

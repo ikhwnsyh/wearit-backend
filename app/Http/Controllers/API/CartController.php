@@ -45,12 +45,13 @@ class CartController extends Controller
         if ($dataCart->isNotEmpty()) {
             return response()->json([
                 'success' => true,
-                'dataCart'    => $dataCart,
-            ], 201);
+                'data cart'    => $dataCart,
+            ], 200);
         }
         return response()->json([
-            'success' => true,
+            'success' => false,
             'message'    => "Keranjang kosong. Anda belum memasukkan barang ke keranjang!",
-        ], 204);
+            'data_cart' => null
+        ], 200);
     }
 }

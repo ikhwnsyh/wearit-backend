@@ -73,4 +73,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany('App\Models\Cart');
     }
+
+    public function dataTubuh()
+    {
+        return $this->belongsTo('App\Models\DataTubuh', 'id');
+    }
 }

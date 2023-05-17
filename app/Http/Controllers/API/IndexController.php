@@ -14,12 +14,22 @@ class IndexController extends Controller
         if ($produk) {
             return response()->json([
                 'success' => true,
-                'prod$produk'    => $produk,
+                'data_produk'    => $produk,
             ], 201);
         }
         return response()->json([
             'success' => true,
             'message'    => "Belum ada produk!",
         ], 204);
+    }
+
+    public function detailProduct($id)
+    {
+        $detailProduct = Product::where('id', $id)->first();
+        // session()->put('product', $detailProduct);
+        return response()->json([
+            'success' => true,
+            'detailProduct'    => $detailProduct,
+        ], 201);
     }
 }
