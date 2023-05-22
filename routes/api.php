@@ -30,11 +30,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [UserController::class, 'regist']);
 Route::post('/login', [UserController::class, 'login']);
-Route::get('dashboard/product', [ProductController::class, 'allProduct']);
+Route::get('dashboard/product', [DashboardController::class, 'allProduct']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/', [IndexController::class, 'index']);
-    Route::get('product/{id}', [IndexController::class, 'detailProduct']);
+    Route::get('product/{slug}', [IndexController::class, 'detailProduct']);
+    Route::get('beli-langsung', [TransaksiController::class, 'beli']);
     Route::get('cart', [CartController::class, 'cart']);
     Route::post('cart/{id}', [CartController::class, 'store']);
 
@@ -61,7 +62,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'dashoard']);
 
         Route::post('dashboard/tambah-product', [ProductController::class, 'store']);
-        Route::get('dasboard/edit-product/{id}', [ProductController::class, 'editProduct']);
+        Route::get('dasboard/edit-product/{slug}', [ProductController::class, 'editProduct']);
         Route::put('update-product/{id}', [ProductController::class, 'updateProduct']);
 
         Route::get('dashboard/transaksi', [TransaksiController::class, 'allTransaction']);

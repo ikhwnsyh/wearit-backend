@@ -5,13 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Product extends Model
+class Size extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
-    public function productSize()
-    {
-        return $this->hasMany('App\Models\Size');
-    }
 }

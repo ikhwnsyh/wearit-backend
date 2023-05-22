@@ -21,6 +21,6 @@ class Admin
             return $next($request);
         }
 
-        return response()->json(['message' => 'ditolak'], 401);
+        return response()->json(['message' => 'Anda bukan admin. Akses ditolak!'], 401);
     }
 }

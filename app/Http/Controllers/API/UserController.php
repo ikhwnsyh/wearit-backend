@@ -16,7 +16,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name'      => 'required',
             'email'     => 'required|email|unique:users',
-            'password'  => 'required|min:8|confirmed'
+            'password'  => 'required|min:8|confirmed',
+            'gender'  => 'required',
         ]);
 
         //if validation fails
@@ -28,7 +29,8 @@ class UserController extends Controller
         $user = User::create([
             'name'      => $request->name,
             'email'     => $request->email,
-            'password'  => bcrypt($request->password)
+            'password'  => bcrypt($request->password),
+            'gender' => $request->gender,
         ]);
 
         //return response JSON user is created

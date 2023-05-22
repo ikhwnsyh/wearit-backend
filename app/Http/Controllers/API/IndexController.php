@@ -23,9 +23,9 @@ class IndexController extends Controller
         ], 204);
     }
 
-    public function detailProduct($id)
+    public function detailProduct($slug)
     {
-        $detailProduct = Product::where('id', $id)->first();
+        $detailProduct = Product::where('slug', $slug)->first();
         // session()->put('product', $detailProduct);
         return response()->json([
             'success' => true,
