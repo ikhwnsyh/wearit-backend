@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('ekspedisis', function (Blueprint $table) {
             $table->id();
             $table->string('nama_ekspedisi');
-            $table->decimal('ongkir');
+            $table->decimal('ongkir', 9, 3);
             $table->timestamps();
         });
     }

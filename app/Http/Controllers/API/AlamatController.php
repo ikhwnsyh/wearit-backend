@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alamat;
+use App\Models\Province;
+use App\Models\Regency;
+use App\Models\Village;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +17,7 @@ class AlamatController extends Controller
     {
         $user_id = Auth::id();
         $validator = Validator::make($request->all(), [
-            'alamat'      => 'required',
+            'alamat'      => 'required|unique:alamats',
         ]);
 
         //if validation fails
@@ -22,11 +25,9 @@ class AlamatController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        //create user
-        $alamat = Alamat::create([
-            'alamat'      => $request->alamat,
-            'user_id' => $user_id,
-        ]);
+        $data = $request->all();
+        $data['user_id'] = $user_id;
+        $alamat = Alamat::create($data);
 
         //return response JSON user is created
         if ($alamat) {
@@ -40,5 +41,31 @@ class AlamatController extends Controller
         return response()->json([
             'success' => false,
         ], 409);
+    }
+
+    public function provinsi()
+    {
+        $data = Province::where('name', 'LIKE', '%' . request('q') . '%')->paginate(34);
+
+        return response()->json($data);
+    }
+
+    public function kabupaten($id)
+    {
+        $data = Regency::where('province_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
+
+        return response()->json($data);
+    }
+    public function kecamatan($id)
+    {
+        $data = Regency::where('kabupaten', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
+
+        return response()->json($data);
+    }
+    public function kelurahan($id)
+    {
+        $data = Village::where('district_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
+
+        return response()->json($data);
     }
 }

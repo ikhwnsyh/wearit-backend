@@ -60,11 +60,6 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function getIdUser()
-    {
-        $user_id = Auth::id();
-    }
-
     public function alamat()
     {
         return $this->hasMany('App\Models\Alamat');
@@ -75,8 +70,22 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany('App\Models\Cart');
     }
 
-    public function dataTubuh()
+    public function body()
     {
-        return $this->belongsTo('App\Models\DataTubuh', 'id');
+        return $this->hasOne('App\Models\Body');
+    }
+
+    public function userTransactions()
+    {
+        return $this->hasMany('App\Models\Transaksi');
+    }
+
+    public function detailUserTransactons()
+    {
+        return $this->hasMany('App\Models\Detail', 'transaksi_id');
+    }
+    public function userKategori()
+    {
+        return $this->belongsTo('App\Models\Kategori', 'kategori_id');
     }
 }

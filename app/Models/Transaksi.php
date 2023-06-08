@@ -9,4 +9,14 @@ class Transaksi extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function transactions()
+    {
+        return $this->hasMany('App\Models\Detail');
+    }
+
+    public function ekspedisi()
+    {
+        return $this->belongsTo('App\Models\Ekspedisi');
+    }
 }

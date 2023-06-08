@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Cart extends Model
+class Detail extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
-    public function dataProduct()
+    public function detailProduct()
     {
         return $this->belongsTo('App\Models\Product', 'product_id');
     }
 
-    public function productSize()
+    public function detailSize()
     {
         return $this->belongsTo('App\Models\Size', 'product_id');
     }

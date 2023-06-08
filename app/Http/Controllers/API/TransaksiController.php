@@ -3,88 +3,69 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Detail;
+use App\Models\Ekspedisi;
+use App\Models\Size;
 use App\Models\Transaksi;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TransaksiController extends Controller
 {
-    // public function beli()
-    // {
-    //     $listProduct = session()->get('data');
-    //     dd(session('data'));
-    //     return response()->json([
-    //         'success' => true,
-    //         'dataTransaksi'    => $listProduct,
-    //     ], 201);
-    // }
-
-    public function beli(Request $request)
+    public function beli()
     {
-        if ($request->id) {
-            $product = Product::where('id', $request->id)->first();
-            if ($product) {
-                // session()->put('data', $product->id);
-                // dd(session('data'));
+        $ekspedisi = Ekspedisi::all();
+        $userAddress = Auth::user()->alamat;
+        if ($ekspedisi and $userAddress) {
+            return response()->json([
+                'success' => true,
+                'ekspedisi' => $ekspedisi,
+                'userAddress' => $userAddress,
+            ], 200);
+        }
+    }
 
-                return response()->json([
-                    'success' => true,
-                    'data' => $product,
-                ], 200);
+    public function bayar(Request $request)
+    {
+        $product_id = $request->product_id;
+        $size_id = $request->size_id;
+        $quantity = $request->quantity;
+        if ($product_id and $size_id) {
+            $transaksi = Transaksi::create([
+                'user_id' => Auth::user()->id,
+                'ekspedisi_id' => $request->ekspedisi_id,
+                'status_id' => 1,
+                'paid' => false,
+            ]);
+            if ($transaksi) {
+                foreach ($product_id as $index => $product) {
+                    $detailTransaksi = Detail::create([
+                        'transaksi_id' => $transaksi->id,
+                        'product_id' => $product,
+                        'alamat_id' => $request->alamat_id,
+                        'size_id' => $size_id[$index],
+                        'price' => $request->price,
+                        'final_price' => $request->final_price,
+                        'transaction_date' => Carbon::now(),
+                        'quantity' => $quantity[$index],
+                    ]);
+                    $test = Size::where('id', $size_id[$index])->first();
+                    if ($test) {
+                        $newStock = $test->stock - $quantity[$index];
+                        $test->update([
+                            'stock' => $newStock,
+                        ]);
+                    }
+                }
             }
             return response()->json([
-                'success' => false,
-            ], 404);
+                'success' => true,
+                'data' => $transaksi,
+            ], 200);
         }
         return response()->json([
             'success' => false,
         ], 422);
-    }
-
-    public function allTransaction()
-    {
-        $allTransaction = Transaksi::get();
-        if ($allTransaction->isNotEmpty()) {
-            return response()->json([
-                'success' => true,
-                'data_seluruh_transaksi' => $allTransaction,
-            ], 200);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => "Data transaksi kosong. tidak ada transaksi"
-            ], 200);
-        }
-    }
-
-    public function transactionWaitToApprove($id)
-    {
-        $waitToApprove = Transaksi::where('status_id', $id)->get();
-    }
-
-    public function transactionWaitToSend($id)
-    {
-        $waitToSend = Transaksi::where('status_id', $id)->get();
-    }
-    public function approveTransaction($id)
-    {
-        Transaksi::where('id', $id)->update([
-            'status_id' => 2
-        ]);
-    }
-
-    public function rejectTransaction($id)
-    {
-        Transaksi::where('id', $id)->update([
-            'status_id' => 4
-        ]);
-    }
-
-    public function onGoing($id)
-    {
-        Transaksi::where('id', $id)->update([
-            'status_id' => 3
-        ]);
     }
 }

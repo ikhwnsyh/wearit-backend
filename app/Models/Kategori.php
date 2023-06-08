@@ -5,9 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class DataTubuh extends Model
+class Kategori extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    public function userAsset()
+    {
+        return $this->hasMany('App\Models\Asset', 'kategori_id');
+    }
 }
