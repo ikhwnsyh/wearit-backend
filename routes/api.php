@@ -1,4 +1,4 @@
-<?php
+<?php header('Access-Control-Allow-Origin: *');
 
 use App\Http\Controllers\API\AlamatController;
 use App\Http\Controllers\API\BodyController;
@@ -32,6 +32,7 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 
 Route::post('/register', [UserController::class, 'regist']);
 Route::post('/login', [UserController::class, 'login']);
+
 
 
 Route::middleware('auth:api')->group(function () {
