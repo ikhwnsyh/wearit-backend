@@ -33,6 +33,10 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 Route::post('/register', [UserController::class, 'regist']);
 Route::post('/login', [UserController::class, 'login']);
 
+Route::get('getProvinsi', [AlamatController::class, 'provinsi'])->name('provinsi.index');
+Route::get('getKabupaten/{id}', [AlamatController::class, 'kabupaten']);
+Route::get('getKecamatan/{id}', [AlamatController::class, 'kecamatan']);
+Route::get('getKelurahan/{id}', [AlamatController::class, 'keluarahan']);
 
 
 Route::middleware('auth:api')->group(function () {
@@ -67,10 +71,6 @@ Route::middleware('auth:api')->group(function () {
     Route::get('beli-langsung', [TransaksiController::class, 'beli']);
     Route::post('bayar', [TransaksiController::class, 'bayar']);
 
-    Route::get('getProvinsi', [AlamatController::class, 'provinsi'])->name('provinsi.index');
-    Route::get('getKabupaten/{id}', [AlamatController::class, 'kabupaten']);
-    Route::get('getKecamatan/{id}', [AlamatController::class, 'kecamatan']);
-    Route::get('getKelurahan/{id}', [AlamatController::class, 'keluarahan']);
 
     Route::middleware('admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'dashboard']);

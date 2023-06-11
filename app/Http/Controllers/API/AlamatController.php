@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Alamat;
+use App\Models\District;
 use App\Models\Province;
 use App\Models\Regency;
 use App\Models\Village;
@@ -58,7 +59,7 @@ class AlamatController extends Controller
     }
     public function kecamatan($id)
     {
-        $data = Regency::where('kabupaten', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
+        $data = District::where('regency_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
 
         return response()->json($data);
     }
