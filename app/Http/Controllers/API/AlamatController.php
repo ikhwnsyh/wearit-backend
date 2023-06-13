@@ -19,7 +19,10 @@ class AlamatController extends Controller
         foreach ($data as $newData) {
             $small = strtolower($newData->name);
             $new = ucwords($small);
-            $finalNames[] = $new;
+            $finalNames[] = [
+                'id' => $newData->id,
+                'name' => $new,
+            ];
         }
         return response()->json($finalNames);
     }
@@ -31,7 +34,10 @@ class AlamatController extends Controller
         foreach ($data as $newData) {
             $small = strtolower($newData->name);
             $new = ucwords($small);
-            $finalNames[] = $new;
+            $finalNames[] = [
+                'id' => $newData->id,
+                'name' => $new,
+            ];
         }
         return response()->json($finalNames);
     }
@@ -41,9 +47,12 @@ class AlamatController extends Controller
         $finalNames = [];
         $data = District::where('regency_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
         foreach ($data as $newData) {
-            $small = strtolower($newData->name);
+            $small = strtolower($newData);
             $new = ucwords($small);
-            $finalNames[] = $new;
+            $finalNames[] = [
+                'id' => $newData->id,
+                'name' => $new,
+            ];
         }
         return response()->json($finalNames);
     }
@@ -55,7 +64,10 @@ class AlamatController extends Controller
         foreach ($data as $newData) {
             $small = strtolower($newData->name);
             $new = ucwords($small);
-            $finalNames[] = $new;
+            $finalNames[] = [
+                'id' => $newData->id,
+                'name' => $new,
+            ];
         }
         return response()->json($finalNames);
     }
