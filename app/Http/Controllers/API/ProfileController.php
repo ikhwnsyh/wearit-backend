@@ -102,18 +102,106 @@ class ProfileController extends Controller
     public function showDataTubuh()
     {
         $dataTubuh = Auth::user()->body;
-        return response()->json([
-            'success' => true,
-            'data_tubuh' => $dataTubuh,
-        ], 200);
+        if ($dataTubuh) {
+            return response()->json([
+                'success' => true,
+                'data_tubuh' => $dataTubuh,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'data_tubuh' => null,
+                'message' => 'data tubuh anda kosong!',
+            ], 200);
+        }
     }
 
     public function updateDataTubuh(Request $request)
     {
-        $data = Auth::user()->dataTubuh;
+        $data = Auth::user()->body;
+        $weight = $request->berat_badan;
+        $height = $request->tinggi_badan;
+        $heightMeter = $height / 100;
+        $countBMI = $weight / ($heightMeter * $heightMeter);
+
+        $kategoriBMI = '';
+        if ($countBMI < 18.5) {
+            $kategoriBMI = 'underweight';
+        } elseif ($countBMI >= 18.5 && $countBMI <= 24.9) {
+            $kategoriBMI = 'normal';
+        } elseif ($countBMI >= 25 && $countBMI <= 29.9) {
+            $kategoriBMI = 'overweight';
+        } elseif ($countBMI >= 30) {
+            $kategoriBMI = 'obesitas';
+        }
+
+        //hitung waist circumference
+        $obesitasCentral = false;
+        $waist = $request->lingkar_perut;
+        if ($waist >= 102) {
+            $obesitasCentral = true;
+        }
+
+        //menentukan termasuk tinggi, sedang atau pendek 
+        $kategoriTinggi = '';
+        if ($height > 170) {
+            $kategoriTinggi = 'tinggi';
+        } elseif ($height > 160 && $height <= 170) {
+            $kategoriTinggi = 'sedang';
+        } elseif ($height < 160) {
+            $kategoriTinggi = 'pendek';
+        }
+        $kategoriTubuh = 0;
+        if ($kategoriBMI !== 'obesitas') {
+            if ($kategoriBMI == 'underweight' && !$obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 5;
+            } elseif ($kategoriBMI == 'underweight' && !$obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 3;
+            } elseif ($kategoriBMI == 'underweight' && !$obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 1;
+            } elseif ($kategoriBMI == 'underweight' && $obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 6;
+            } elseif ($kategoriBMI == 'underweight' && $obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 4;
+            } elseif ($kategoriBMI == 'underweight' && $obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 2;
+            } elseif ($kategoriBMI == 'normal' && !$obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 11;
+            } elseif ($kategoriBMI == 'normal' && !$obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 9;
+            } elseif ($kategoriBMI == 'normal' && !$obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 7;
+            } elseif ($kategoriBMI == 'normal' && $obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 12;
+            } elseif ($kategoriBMI == 'normal' && $obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 10;
+            } elseif ($kategoriBMI == 'normal' && $obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 8;
+            } elseif ($kategoriBMI == 'overweight' && !$obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 17;
+            } elseif ($kategoriBMI == 'overweight' && !$obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 15;
+            } elseif ($kategoriBMI == 'overweight' && !$obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 13;
+            } elseif ($kategoriBMI == 'overweight' && $obesitasCentral && $kategoriTinggi == 'tinggi') {
+                $kategoriTubuh = 18;
+            } elseif ($kategoriBMI == 'overweight' && $obesitasCentral && $kategoriTinggi == 'sedang') {
+                $kategoriTubuh = 16;
+            } elseif ($kategoriBMI == 'overweight' && $obesitasCentral && $kategoriTinggi == 'pendek') {
+                $kategoriTubuh = 14;
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message'    => "Maaf kategori obesitas belum tersedia! ",
+            ], 201);
+        }
+
         $update = Body::where('id', $data->id)->update([
-            'tinggi_badan' => $request->tinggi_badan,
-            'berat_badan' => $request->berat_badan
+            'tinggi_badan' => $height,
+            'berat_badan' => $weight,
+            'lingkar_perut' => $waist,
+            'kategori_id' => $kategoriTubuh,
         ]);
         return response()->json([
             'success' => true,

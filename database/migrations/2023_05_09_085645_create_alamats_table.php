@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('alamats', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
+            $table->integer('province_id');
+            $table->integer('regency_id');
+            $table->integer('district_id');
             $table->string('alamat');
             $table->timestamps();
         });

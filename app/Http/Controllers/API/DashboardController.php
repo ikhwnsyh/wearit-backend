@@ -13,12 +13,15 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
+        $totalProduct = Product::count();
         $payFalse = Transaksi::where('paid', false)->count();
         $paid = Transaksi::where('paid', true)->count();
-        $totalPendapatan = Transaksi::where('paid', false)->with('transactions')->first();
-        $totalProduct = Product::count();
+        $pendapatan = Transaksi::where('paid', true)->with('transactions')->get();
+        dd($pendapatan);
+        foreach ($pendapatan as $totalPendapatan) {
+            dd($totalPendapatan->final_price);
+        }
         // $totalPendapatan = Detail::sum('final_price');
-        dd($totalProduct);
     }
 
     public function getAllProduct()

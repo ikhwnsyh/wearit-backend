@@ -1,17 +1,14 @@
 <?php header('Access-Control-Allow-Origin: *');
 
 use App\Http\Controllers\API\AlamatController;
-use App\Http\Controllers\API\BodyController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ProfileController;
+use App\Http\Controllers\API\RegistrasiController;
 use App\Http\Controllers\API\TransaksiController;
-use App\Http\Controllers\API\UserController;
-use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Symfony\Component\HttpKernel\Profiler\Profile;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,25 +27,22 @@ use Symfony\Component\HttpKernel\Profiler\Profile;
 
 
 
-Route::post('/register', [UserController::class, 'regist']);
-Route::post('/login', [UserController::class, 'login']);
+Route::post('/login', LoginController::class);
+Route::post('/register', RegistrasiController::class);
 
 Route::get('getProvinsi', [AlamatController::class, 'provinsi'])->name('provinsi.index');
 Route::get('getKabupaten/{id}', [AlamatController::class, 'kabupaten']);
 Route::get('getKecamatan/{id}', [AlamatController::class, 'kecamatan']);
-Route::get('getKelurahan/{id}', [AlamatController::class, 'keluarahan']);
+Route::get('getKelurahan/{id}', [AlamatController::class, 'kelurahan']);
 
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/index', [ProductController::class, 'index']);
     Route::get('product/{slug}', [ProductController::class, 'detailProduct']);
 
     Route::get('cart', [CartController::class, 'cart']);
     Route::post('cart', [CartController::class, 'store']);
     Route::delete('hapus-cart', [CartController::class, 'delete']);
-
-    Route::post('isi-alamat', [AlamatController::class, 'store']);
-    Route::post('isi-datatubuh', [BodyController::class, 'store']);
 
     Route::get('profile', [ProfileController::class, 'profile']);
     Route::get('profile/edit', [ProfileController::class, 'profile']);
@@ -59,7 +53,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('update-alamat/{id}', [ProfileController::class, 'updateAddress']);
     Route::delete('profile/hapus-alamat/{id}', [ProfileController::class, 'deleteAddress']);
 
-    Route::get('profile/data-tubuh', [ProfileController::class, 'showDataTubuh']); //ralat jadi body
+    Route::get('profile/body', [ProfileController::class, 'showDataTubuh']); //ralat jadi body
     Route::put('update-data-tubuh', [ProfileController::class, 'updateDataTubuh']);
 
     Route::get('profile/data-transaction', [ProfileController::class, 'dataTransaction']);
