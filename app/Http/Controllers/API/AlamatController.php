@@ -47,7 +47,7 @@ class AlamatController extends Controller
         $finalNames = [];
         $data = District::where('regency_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
         foreach ($data as $newData) {
-            $small = strtolower($newData);
+            $small = strtolower($newData->name);
             $new = ucwords($small);
             $finalNames[] = [
                 'id' => $newData->id,

@@ -300,7 +300,7 @@ class ProfileController extends Controller
         }
         if ($request->has('bukti_pembayaran')) {
             $imageName = Str::random(6) . '-' . $request->bukti_pembayaran->getClientOriginalName();
-            $buktiImage =  $request->bukti_pembayaran->move(public_path('../../wearit-frontend/public/asset/bukti'), $imageName);
+            $buktiImage =  $request->bukti_pembayaran->move(public_path('../../wearit-frontend/public/assets/bukti'), $imageName);
             $bayar = Bukti::create([
                 'bukti_pembayaran' => $imageName,
                 'transaksi_id' => $request->transaksi_id,

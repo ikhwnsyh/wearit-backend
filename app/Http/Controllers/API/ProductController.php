@@ -49,7 +49,6 @@ class ProductController extends Controller
                 'message' => "maaf data tidak ditemukan!",
             ], 201);
         }
-        // session()->put('product', $detailProduct);
     }
 
     public function store(Request $request)
@@ -67,12 +66,12 @@ class ProductController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
-
         $product = Product::create([
             'product_name'      => $request->product_name,
             'description'      => $request->description,
             'slug'      => Str::slug($request->product_name),
             'price'      => $request->price,
+
         ]);
 
         $size = $product->productSize()->createMany([
@@ -80,14 +79,22 @@ class ProductController extends Controller
             ['size_name' => 'M', 'stock' => $request->stock_m],
             ['size_name' => 'L', 'stock' => $request->stock_l],
         ]);
+
         if ($request->has('image')) {
-            foreach ($request->file('image') as $image) {
-                $imageName = Str::random(6) . '-' . $image->getClientOriginalName();
-                $image->move(public_path('../../wearit-frontend/public/asset/images'), $imageName);
+            foreach ($request->file('image') as $index => $image) {
+                $imageName = Str::random(6) . '_' . $image->getClientOriginalName();
+
+                $image->move(public_path('../../wearit-frontend/public/assets/images'), $imageName);
                 Image::create([
                     'image' => $imageName,
                     'product_id' => $product->id,
                 ]);
+
+                if ($index == 0) {
+                    Product::where('id', $product->id)->update([
+                        'thumbnail' => $imageName,
+                    ]);
+                }
             }
         } else {
             return response()->json([
@@ -99,7 +106,7 @@ class ProductController extends Controller
         if ($request->has('asset')) {
             foreach ($request->file('asset') as $asset) {
                 $assetName = $asset->getClientOriginalName();
-                $asset->move(public_path('../../wearit-frontend/public/asset/3d'), $assetName);
+                $asset->move(public_path('../../wearit-frontend/public/assets/3d'), $assetName);
 
                 //split nama file menjadi 2
                 $splitFileName = explode("_", $assetName, 2);

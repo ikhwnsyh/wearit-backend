@@ -1,4 +1,4 @@
-<?php header('Access-Control-Allow-Origin: *');
+<?php
 
 use App\Http\Controllers\API\AlamatController;
 use App\Http\Controllers\API\CartController;

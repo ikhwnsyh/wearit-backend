@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Detail;
 use App\Models\Product;
 use App\Models\Status;
 use App\Models\Transaksi;
@@ -14,19 +13,31 @@ class DashboardController extends Controller
     public function dashboard()
     {
         $totalProduct = Product::count();
-        $payFalse = Transaksi::where('paid', false)->count();
-        $paid = Transaksi::where('paid', true)->count();
-        $pendapatan = Transaksi::where('paid', true)->with('transactions')->get();
-        dd($pendapatan);
-        foreach ($pendapatan as $totalPendapatan) {
-            dd($totalPendapatan->final_price);
-        }
-        // $totalPendapatan = Detail::sum('final_price');
+        $menungguPembayaran = Transaksi::where('status_id', 1)->count();
+        $menungguApprove = Transaksi::where('status_id', 2)->count();
+        $sedangDiproses = Transaksi::where('status_id', 3)->count();
+        $pendapatan = Transaksi::where('paid', true)
+            ->with('transactions')
+            ->get()
+            ->pluck('transactions')
+            ->flatten()
+            ->pluck('final_price')
+            ->sum();
+
+        // Tampilkan atau gunakan nilai total final price
+        return response()->json([
+            'success' => true,
+            'income' => $pendapatan,
+            'diproses' => $sedangDiproses,
+            'menunggu' => $menungguPembayaran,
+            'approve' => $menungguApprove,
+            'product' => $totalProduct
+        ], 200);
     }
 
     public function getAllProduct()
     {
-        $product = Product::with('productSize')->get();
+        $product = Product::with('productSize', 'image')->get();
         if ($product->isNotEmpty()) {
             return response()->json([
                 'success' => true,
