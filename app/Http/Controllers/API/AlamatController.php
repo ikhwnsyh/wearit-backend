@@ -9,6 +9,8 @@ use App\Models\Province;
 use App\Models\Regency;
 use App\Models\Village;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class AlamatController extends Controller
 {
@@ -70,5 +72,30 @@ class AlamatController extends Controller
             ];
         }
         return response()->json($finalNames);
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'alamat'      => 'required',
+            'province_id' => 'required',
+            'regency_id'      => 'required',
+            'district_id' => 'required',
+
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+        $alamat = Alamat::create([
+            'user_id' => Auth::user()->id,
+            'alamat' => $request->alamat,
+            'province_id' => $request->province_id,
+            'regency_id' => $request->regency_id,
+            'district_id' => $request->district_id,
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Alamat berhasil ditambahakan!',
+        ], 200);
     }
 }
