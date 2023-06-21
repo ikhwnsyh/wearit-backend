@@ -88,10 +88,29 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email'      => 'required|unique:users|email',
+                'password' => 'required|min:8|confirmed'
+            ],
+            [
+                'email.uniques' => 'Email sudah digunakan. Gunakan email yang lain',
+                'email.email' => 'Email tidak valid',
+                'password.min' => 'Minimal password 8 karakter',
+                'password.confirmed' => 'Password tidak sama!',
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
         $updateUser = User::where('id', Auth::user()->id);
-        $data = $request->all();
-        $data['password'] = bcrypt($request->password);
-        $updateUser->update($data);
+        $updateUser->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->passworrd),
+        ]);
         return response()->json([
             'success' => true,
             'message' => "data diri berhasil diupdate!",
@@ -134,7 +153,6 @@ class ProfileController extends Controller
         } elseif ($countBMI >= 30) {
             $kategoriBMI = 'obesitas';
         }
-
         //hitung waist circumference
         $obesitasCentral = false;
         $waist = $request->lingkar_perut;
@@ -193,7 +211,7 @@ class ProfileController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message'    => "Maaf kategori obesitas belum tersedia! ",
+                'message'    => "Maaf kategori BMI obesitas belum tersedia! ",
             ], 201);
         }
 

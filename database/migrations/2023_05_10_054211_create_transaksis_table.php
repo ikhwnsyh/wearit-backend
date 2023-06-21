@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('ekspedisi_id');
             $table->integer('status_id');
+            $table->integer('final_price');
             $table->boolean('paid');
             $table->timestamps();
         });

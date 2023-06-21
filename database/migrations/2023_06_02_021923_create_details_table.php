@@ -21,7 +21,6 @@ return new class extends Migration
             $table->integer('alamat_id');
             $table->integer('quantity');
             $table->integer('price');
-            $table->integer('final_price');
             $table->timestamp('transaction_date');
             $table->timestamp('end_transaction')->nullable();
             $table->timestamps();

@@ -52,6 +52,7 @@ class TransaksiController extends Controller
                 $transaksi = Transaksi::create([
                     'user_id' => Auth::user()->id,
                     'ekspedisi_id' => $request->ekspedisi_id,
+                    'final_price' => $request->final_price,
                     'status_id' => 1,
                     'paid' => false,
                 ]);
@@ -62,7 +63,6 @@ class TransaksiController extends Controller
                         'alamat_id' => $request->alamat_id,
                         'size_id' => $size_id[$index],
                         'price' => $request->price,
-                        'final_price' => $request->final_price,
                         'transaction_date' => Carbon::now(),
                         'quantity' => $quantity[$index],
                     ]);

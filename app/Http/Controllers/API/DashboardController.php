@@ -71,7 +71,7 @@ class DashboardController extends Controller
     {
         $status = Status::where('slug', $slug)->firstOrFail();
         $statusId = $status->id;
-        $data = Transaksi::where('status_id', $statusId)->get();
+        $data = Transaksi::where('status_id', $statusId)->with('transactions')->get();
         if ($data->isNotEmpty()) {
             return response()->json([
                 'success' => true,

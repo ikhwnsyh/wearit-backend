@@ -124,7 +124,7 @@ class RegistrasiController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message'    => "Maaf kategori obesitas belum tersedia! ",
+                'message'    => "Maaf kategori BMI obesitas belum tersedia! ",
             ], 201);
         }
         //create user
