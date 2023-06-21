@@ -26,6 +26,7 @@ class RegistrasiController extends Controller
                 'name'      => 'required',
                 'email'     => 'required|email|unique:users',
                 'password'  => 'required|min:8|confirmed',
+                'handphone' => 'required|numeric|min:11',
                 //rules untuk alamat
                 'alamat'      => 'required',
                 'province_id' => 'required',
@@ -41,6 +42,8 @@ class RegistrasiController extends Controller
                 'tinggi_badan.max' => 'Maximal tinggi badan adalah 200 cm!',
                 'berat_badan.min' => 'Minimal berat badan adalah 35 kg!',
                 'berat_badan.max' => 'Maximal berat badan adalah 100 kg!',
+                'handphone.numeric' => 'No. telfon tidak valid!',
+                'handphone.min' => 'No. telfon tidak valid!. Digit kurang!'
             ],
         );
 
@@ -131,6 +134,7 @@ class RegistrasiController extends Controller
         $user = User::create([
             'name'      => $request->name,
             'email'     => $request->email,
+            'handphone' => $request->handphone,
             'password'  => bcrypt($request->password),
             'gender' => "Pria",
         ]);

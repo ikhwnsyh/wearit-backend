@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@foodfest.com',
             'password' => bcrypt('admin123'),
             'gender' => 'pria',
+            'handphone' => 12334241,
             'is_admin' => true,
         ]);
     }

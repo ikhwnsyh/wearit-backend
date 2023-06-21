@@ -15,4 +15,18 @@ class Alamat extends Model
     {
         return $this->belongsTo('App\Models\User');
     }
+
+
+    public function province()
+    {
+        return $this->belongsTo('App\Models\Province', 'province_id');
+    }
+    public function kabupaten()
+    {
+        return $this->belongsTo('App\Models\Regency', 'regency_id');
+    }
+    public function kecamatan()
+    {
+        return $this->belongsTo('App\Models\District', 'district_id');
+    }
 }

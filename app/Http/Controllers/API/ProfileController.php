@@ -17,7 +17,7 @@ class ProfileController extends Controller
 {
     public function showAddress()
     {
-        $dataAddress = Auth::user()->alamat;
+        $dataAddress = Alamat::where('user_id', Auth::id())->with('province', 'kabupaten', 'kecamatan')->get();
         if ($dataAddress->isNotEmpty()) {
             return response()->json([
                 'success' => true,
