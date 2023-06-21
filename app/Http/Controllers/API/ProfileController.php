@@ -34,7 +34,7 @@ class ProfileController extends Controller
 
     public function editAddress($id)
     {
-        $detailAddress = Auth::user()->alamat->where('id', $id);
+        $detailAddress = Alamat::where('id', $id)->with('province', 'kabupaten', 'kecamatan')->first();
         return response()->json([
             'success' => true,
             'detail_alamat' => $detailAddress,
