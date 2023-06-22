@@ -37,35 +37,36 @@ Route::get('getKelurahan/{id}', [AlamatController::class, 'kelurahan']);
 
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/index', [ProductController::class, 'index']);
-    Route::get('product/{slug}', [ProductController::class, 'detailProduct']);
+    Route::middleware('konsumen')->group(function () {
+        Route::get('/index', [ProductController::class, 'index']);
+        Route::get('product/{slug}', [ProductController::class, 'detailProduct']);
 
-    Route::get('cart', [CartController::class, 'cart']);
-    Route::post('cart', [CartController::class, 'store']);
-    Route::delete('hapus-cart', [CartController::class, 'delete']);
+        Route::get('cart', [CartController::class, 'cart']);
+        Route::post('cart', [CartController::class, 'store']);
+        Route::delete('hapus-cart', [CartController::class, 'delete']);
 
-    Route::get('profile', [ProfileController::class, 'profile']);
-    Route::get('profile/edit', [ProfileController::class, 'profile']);
-    Route::put('update-profile', [ProfileController::class, 'updateProfile']);
+        Route::get('profile', [ProfileController::class, 'profile']);
+        Route::get('profile/edit', [ProfileController::class, 'profile']);
+        Route::put('update-profile', [ProfileController::class, 'updateProfile']);
 
-    Route::get('profile/alamat', [ProfileController::class, 'showAddress']);
-    Route::post('profile/tambah-alamat', [AlamatController::class, 'store']);
-    Route::get('profile/edit-alamat/{id}', [ProfileController::class, 'editAddress']);
-    Route::put('update-alamat/{id}', [ProfileController::class, 'updateAddress']);
-    Route::delete('profile/hapus-alamat/{id}', [ProfileController::class, 'deleteAddress']);
+        Route::get('profile/alamat', [ProfileController::class, 'showAddress']);
+        Route::post('profile/tambah-alamat', [AlamatController::class, 'store']);
+        Route::get('profile/edit-alamat/{id}', [ProfileController::class, 'editAddress']);
+        Route::put('update-alamat/{id}', [ProfileController::class, 'updateAddress']);
+        Route::delete('profile/hapus-alamat/{id}', [ProfileController::class, 'deleteAddress']);
 
-    Route::get('profile/body', [ProfileController::class, 'showDataTubuh']); //ralat jadi body
-    Route::put('update-data-tubuh', [ProfileController::class, 'updateDataTubuh']);
+        Route::get('profile/body', [ProfileController::class, 'showDataTubuh']); //ralat jadi body
+        Route::put('update-data-tubuh', [ProfileController::class, 'updateDataTubuh']);
 
-    Route::get('profile/data-transaction', [ProfileController::class, 'dataTransaction']);
-    Route::get('profile/data-transaction/{id}', [ProfileController::class, 'invoice']);
+        Route::get('profile/data-transaction', [ProfileController::class, 'dataTransaction']);
+        Route::get('profile/data-transaction/{id}', [ProfileController::class, 'invoice']);
 
-    Route::get('profile/menunggu-pembayaran', [ProfileController::class, 'listToWait']);
-    Route::get('profile/menunggu-pembayaran/{id}', [ProfileController::class, 'uploadBukti']);
-    Route::post('store-bukti', [ProfileController::class, 'storeBukti']);
-    Route::get('beli-langsung', [TransaksiController::class, 'beli']);
-    Route::post('bayar', [TransaksiController::class, 'bayar']);
-
+        Route::get('profile/menunggu-pembayaran', [ProfileController::class, 'listToWait']);
+        Route::get('profile/menunggu-pembayaran/{id}', [ProfileController::class, 'uploadBukti']);
+        Route::post('store-bukti', [ProfileController::class, 'storeBukti']);
+        Route::get('beli-langsung', [TransaksiController::class, 'beli']);
+        Route::post('bayar', [TransaksiController::class, 'bayar']);
+    });
 
     Route::middleware('admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'dashboard']);
@@ -73,6 +74,7 @@ Route::middleware('auth:api')->group(function () {
         Route::post('dashboard/tambah-product', [ProductController::class, 'store']);
         Route::get('dasboard/edit-product/{slug}', [ProductController::class, 'editProduct']);
         Route::put('update-product/{id}', [ProductController::class, 'updateProduct']);
+        Route::delete('hapus-product/{slug}', [ProductController::class, 'delete']);
 
         Route::get('dashboard/transaksi', [DashboardController::class, 'allTransaction']);
         Route::get('dashboard/transaksi/{slug}', [DashboardController::class, 'filterTransaction']);

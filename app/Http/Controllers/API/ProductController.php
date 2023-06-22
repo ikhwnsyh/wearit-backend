@@ -513,12 +513,18 @@ class ProductController extends Controller
 
     public function editProduct($slug)
     {
-        $dataProduct =  Product::with('productSize')->where('slug', $slug)->firstOrFail();
-        // session()->put('product', $detailProduct);
-        return response()->json([
-            'success' => true,
-            'detailProduct'    => $dataProduct,
-        ], 201);
+        $dataProduct =  Product::where('slug', $slug)->with('productSize')->first();
+        if ($dataProduct) {
+            return response()->json([
+                'success' => true,
+                'detailProduct'    => $dataProduct,
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data produk tidak ditemukan!',
+            ], 201);
+        }
     }
 
     public function updateProduct(Request $request, $id)
@@ -531,7 +537,7 @@ class ProductController extends Controller
             'stock_m' => 'required|integer',
             'stock_l' => 'required|integer',
         ]);
-
+        // dd($request->all());
         //if validation fails
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -540,6 +546,7 @@ class ProductController extends Controller
             'product_name' => $request->product_name,
             'description' => $request->description,
             'price' => $request->price,
+            'slug' => Str::slug($request->product_name),
         ]);
 
         $stockSizeS = Size::where('product_id', $id)->where('size_name', 'S')->update([
@@ -554,11 +561,27 @@ class ProductController extends Controller
         if ($updatedProduct) {
             return response()->json([
                 'success' => true,
-                'updated_product'    => $updatedProduct,
+                'message' => 'Data produk berhasil diupdate!',
             ], 201);
         }
         return response()->json([
             'success' => false,
         ], 409);
+    }
+
+    public function delete($slug)
+    {
+        $product = Product::where('slug', $slug)->delete();
+        if ($product) {
+            return response()->json([
+                'success' => true,
+                'message' => 'produk berhasil dihapus!',
+            ], 201);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus data produk!',
+            ], 201);
+        }
     }
 }
