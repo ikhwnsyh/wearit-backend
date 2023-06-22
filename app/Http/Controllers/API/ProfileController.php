@@ -18,6 +18,12 @@ class ProfileController extends Controller
     public function showAddress()
     {
         $dataAddress = Alamat::where('user_id', Auth::id())->with('province', 'kabupaten', 'kecamatan')->get();
+        foreach ($dataAddress as $address) {
+            $address->province->name = ucwords(strtolower($address->province->name));
+            $address->kabupaten->name = ucwords(strtolower($address->kabupaten->name));
+            $address->kecamatan->name = ucwords(strtolower($address->kecamatan->name));
+        }
+
         if ($dataAddress->isNotEmpty()) {
             return response()->json([
                 'success' => true,

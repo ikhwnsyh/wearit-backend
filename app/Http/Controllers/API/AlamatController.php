@@ -61,7 +61,6 @@ class AlamatController extends Controller
 
     public function kelurahan($id)
     {
-        $finalNames = [];
         $data = Village::where('district_id', $id)->where('name', 'LIKE', '%' . request('q') . '%')->paginate(20);
         foreach ($data as $newData) {
             $small = strtolower($newData->name);
