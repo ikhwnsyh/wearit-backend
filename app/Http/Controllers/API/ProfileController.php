@@ -97,11 +97,11 @@ class ProfileController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'email'      => 'required|unique:users|email',
+                'email' => 'required|email|unique:users,email,' . Auth::user()->id,
                 'password' => 'required|min:8|confirmed'
             ],
             [
-                'email.uniques' => 'Email sudah digunakan. Gunakan email yang lain',
+                'email.unique' => 'Email sudah digunakan. Gunakan email yang lain',
                 'email.email' => 'Email tidak valid',
                 'password.min' => 'Minimal password 8 karakter',
                 'password.confirmed' => 'Password tidak sama!',
