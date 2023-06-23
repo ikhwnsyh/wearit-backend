@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Alamat;
 use App\Models\Cart;
 use App\Models\Detail;
 use App\Models\Ekspedisi;
@@ -18,7 +19,12 @@ class TransaksiController extends Controller
     public function beli()
     {
         $ekspedisi = Ekspedisi::all();
-        $userAddress = Auth::user()->alamat;
+        $userAddress = Alamat::where('user_id', Auth::id())->with('province', 'kabupaten', 'kecamatan')->get();
+        foreach ($userAddress as $address) {
+            $address->province->name = ucwords(strtolower($address->province->name));
+            $address->kabupaten->name = ucwords(strtolower($address->kabupaten->name));
+            $address->kecamatan->name = ucwords(strtolower($address->kecamatan->name));
+        }
         if ($ekspedisi and $userAddress) {
             return response()->json([
                 'success' => true,
