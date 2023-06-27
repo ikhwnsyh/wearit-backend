@@ -79,6 +79,7 @@ class ProductController extends Controller
             ['size_name' => 'M', 'stock' => $request->stock_m],
             ['size_name' => 'L', 'stock' => $request->stock_l],
         ]);
+        if ($product) {
 
         if ($request->has('image')) {
             foreach ($request->file('image') as $index => $image) {
@@ -498,7 +499,6 @@ class ProductController extends Controller
                 'message' => "Gambar belum dimasukkan!"
             ], 409);
         }
-        if ($product) {
             return response()->json([
                 'success' => true,
                 'product'    => Product::where('id', $product->id)->with(['image', 'productSize', 'assets'])->firstOrFail(),
