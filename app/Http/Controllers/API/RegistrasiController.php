@@ -133,7 +133,7 @@ class RegistrasiController extends Controller
         //create user
         $user = User::create([
             'name'      => $request->name,
-            'email'     => $request->email,
+            'email'     => strtolower($request->email),
             'handphone' => $request->handphone,
             'password'  => bcrypt($request->password),
             'gender' => "Pria",
