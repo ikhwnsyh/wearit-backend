@@ -50,10 +50,9 @@ class ProfileController extends Controller
     public function updateAddress(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'alamat'      => 'required|unique',
+            'alamat'      => 'required|unique:alamats',
 
         ]);
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
@@ -345,5 +344,17 @@ class ProfileController extends Controller
                 'message' => "Gambar belum dimasukkan!"
             ], 409);
         }
+    }
+
+    public function finished($id)
+    {
+        $updateStatus = Transaksi::where('id', $id)->update([
+            'status_id' => 7
+        ]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Konsumen sudah menyelesaikan transaksi. Transaksi selesai',
+            'updated' => $updateStatus,
+        ], 200);
     }
 }

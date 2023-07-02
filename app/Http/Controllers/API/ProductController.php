@@ -62,8 +62,8 @@ class ProductController extends Controller
                 'stock_s' => 'required|numeric|min:0|not_in:0',
                 'stock_m' => 'required|numeric|min:0|not_in:0',
                 'stock_l' => 'required|numeric|min:0|not_in:0',
-                'image' => 'required|image|mimes:jpeg,png,jpg',
-                'asset' => 'required|mimes:glb',
+                'image' => 'required',
+                'asset' => 'required',
             ],
             [
                 'product_name.unique' => 'Gagal menambahkan produk. Produk sudah tersedia!'

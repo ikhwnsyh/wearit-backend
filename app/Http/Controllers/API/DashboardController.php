@@ -92,7 +92,7 @@ class DashboardController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Produk berhasil diapprove. Status berubah menjadi sedang diproses',
+            'message' => 'Produk berhasil diapprove. Status transaksi menjadi sedang diproses',
             'updated' => $updateStatus,
         ], 200);
     }
@@ -100,7 +100,7 @@ class DashboardController extends Controller
     public function rejectTransaction($id)
     {
         $updateStatus = Transaksi::where('id', $id)->update([
-            'status_id' => 4
+            'status_id' => 8
         ]);
         return response()->json([
             'success' => true,
@@ -108,15 +108,14 @@ class DashboardController extends Controller
             'updated' => $updateStatus,
         ], 200);
     }
-
-    public function onGoing($id)
+    public function requestPickup($id)
     {
         $updateStatus =  Transaksi::where('id', $id)->update([
-            'status_id' => 5
+            'status_id' => 4
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Status updated! Produk sedang dikirim menuju alamat!',
+            'message' => 'Status updated! Paket sedang menunggu pickup dari pihak kurir',
             'updated' => $updateStatus,
         ], 200);
     }

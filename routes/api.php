@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\AlamatController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\DashboardController;
+use App\Http\Controllers\API\EkspedisiController;
 use App\Http\Controllers\API\LoginController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ProfileController;
@@ -64,6 +65,9 @@ Route::middleware('auth:api')->group(function () {
         Route::get('profile/menunggu-pembayaran', [ProfileController::class, 'listToWait']);
         Route::get('profile/menunggu-pembayaran/{id}', [ProfileController::class, 'uploadBukti']);
         Route::post('store-bukti', [ProfileController::class, 'storeBukti']);
+
+        Route::put('finished/{id}', [ProfileController::class, 'finished']);
+
         Route::get('beli-langsung', [TransaksiController::class, 'beli']);
         Route::post('bayar', [TransaksiController::class, 'bayar']);
     });
@@ -81,6 +85,11 @@ Route::middleware('auth:api')->group(function () {
 
         Route::put('approved/{id}', [DashboardController::class, 'approveTransaction']);
         Route::put('rejected/{id}', [DashboardController::class, 'rejectTransaction']);
-        Route::put('ongoing/{id}', [DashboardController::class, 'onGoing']);
+        Route::put('requestPickup/{id}', [DashboardController::class, 'requestPickup']);
+    });
+    Route::middleware('kurir')->group(function () {
+        Route::put('pickUp/{id}', [EkspedisiController::class, 'pickUp']);
+        Route::put('finished/{id}', [EkspedisiController::class, 'finished']);
+        Route::get('dashboard-kurir', [EkspedisiController::class, 'index']);
     });
 });

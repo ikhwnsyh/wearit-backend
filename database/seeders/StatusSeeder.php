@@ -27,11 +27,21 @@ class StatusSeeder extends Seeder
                 'status_name' => 'Sedang diproses',
             ],
             [
-                'status_name' => 'Ditolak',
+                'status_name' => 'Paket sedang menunggu pickup oleh jasa kurir',
             ],
             [
                 'status_name' => 'Sedang dikirim',
             ],
+            [
+                'status_name' => 'Telah sampai',
+            ],
+            [
+                'status_name' => 'Selesai',
+            ],
+            [
+                'status_name' => 'Ditolak',
+            ],
+
 
         ];
         foreach ($data as $status) {
