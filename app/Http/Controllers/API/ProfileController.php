@@ -8,6 +8,7 @@ use App\Models\Body;
 use App\Models\Bukti;
 use App\Models\Transaksi;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -349,7 +350,8 @@ class ProfileController extends Controller
     public function finished($id)
     {
         $updateStatus = Transaksi::where('id', $id)->update([
-            'status_id' => 7
+            'status_id' => 7,
+            'end_transaction' => Carbon::now(),
         ]);
         return response()->json([
             'success' => true,

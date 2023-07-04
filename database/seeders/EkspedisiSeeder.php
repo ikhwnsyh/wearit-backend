@@ -17,20 +17,20 @@ class EkspedisiSeeder extends Seeder
     {
         Ekspedisi::create([
             'nama_ekspedisi' => "JNE",
-            'ongkir' => 12.000
+            'ongkir' => 12000
         ]);
 
         Ekspedisi::create([
             'nama_ekspedisi' => "Anteraja",
-            'ongkir' => 11.000
+            'ongkir' => 11000
         ]);
         Ekspedisi::create([
             'nama_ekspedisi' => "SiCepat",
-            'ongkir' => 12.000
+            'ongkir' => 12000
         ]);
         Ekspedisi::create([
             'nama_ekspedisi' => "J&T",
-            'ongkir' => 12.000
+            'ongkir' => 12000
         ]);
     }
 }

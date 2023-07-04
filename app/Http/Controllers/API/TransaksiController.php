@@ -78,17 +78,16 @@ class TransaksiController extends Controller
                     $updateStock->update([
                         'stock' => $newStock,
                     ]);
+                    if ($request->has('cart_id')) {
+                        $cart = Cart::where('user_id', Auth::id())->delete();
+                    }
                 } else {
                     return response()->json([
                         'success' => false,
                         'message' => 'kuantitas pada produk melebihi stok tersedia',
                     ], 200);
                 }
-                if ($request->has('cart_id')) {
-                    $cart = Cart::where('user_id', Auth::id())->delete();
-                }
             }
-
             return response()->json([
                 'success' => true,
                 'data' => $transaksi,
