@@ -53,17 +53,18 @@ class TransaksiController extends Controller
         $product_id = $request->product_id;
         $size_id = $request->size_id;
         $quantity = $request->quantity;
-        foreach ($product_id as $index => $product) {
-            if (Size::where('id', $size_id[$index])->first()->stock >= $quantity[$index]) {
-                $transaksi = Transaksi::create([
-                    'user_id' => Auth::user()->id,
-                    'ekspedisi_id' => $request->ekspedisi_id,
-                    'final_price' => $request->final_price,
-                    'status_id' => 1,
-                    'paid' => false,
-                ]);
-                if ($transaksi) {
-                    $detailTransaksi = Detail::create([
+
+        $transaksi = Transaksi::create([
+            'user_id' => Auth::user()->id,
+            'ekspedisi_id' => $request->ekspedisi_id,
+            'final_price' => $request->final_price,
+            'status_id' => 1,
+            'paid' => false,
+        ]);
+        if ($transaksi) {
+            foreach ($product_id as $index => $product) {
+                if (Size::where('id', $size_id[$index])->first()->stock >= $quantity[$index]) {
+                    Detail::create([
                         'transaksi_id' => $transaksi->id,
                         'product_id' => $product,
                         'alamat_id' => $request->alamat_id,
@@ -77,16 +78,17 @@ class TransaksiController extends Controller
                     $updateStock->update([
                         'stock' => $newStock,
                     ]);
-                    if ($request->has('cart_id')) {
-                        $cart = Cart::where('user_id', Auth::id())->delete();
-                    }
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'kuantitas pada produk melebihi stok tersedia',
+                    ], 200);
                 }
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'kuantitas pada produk melebihi stok tersedia',
-                ], 200);
+                if ($request->has('cart_id')) {
+                    $cart = Cart::where('user_id', Auth::id())->delete();
+                }
             }
+
             return response()->json([
                 'success' => true,
                 'data' => $transaksi,
