@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Alamat;
 use App\Models\Body;
 use App\Models\Bukti;
+use App\Models\Detail;
 use App\Models\Transaksi;
 use App\Models\User;
 use Carbon\Carbon;
@@ -242,7 +243,7 @@ class ProfileController extends Controller
                 'ekspedisi',
                 'transactions.detailProduct',
                 'transactions.detailSize'
-            )->get();
+            )->get()->pluck('transactions')->flatten();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,
@@ -265,7 +266,7 @@ class ProfileController extends Controller
             'ekspedisi',
             'transactions.detailProduct',
             'transactions.detailSize'
-        )->get();
+        )->get()->pluck('transactions')->flatten();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,
