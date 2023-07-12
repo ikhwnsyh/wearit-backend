@@ -20,7 +20,6 @@ class Product extends Model
         return $this->hasMany('App\Models\Image');
     }
 
-    //ini cuma bisa ngambil asset 3d berdasarkan produk_id aja. bukan yang sesuai sama kategori tubuh user
     public function assets()
     {
         return $this->hasMany('App\Models\Asset');

@@ -236,12 +236,13 @@ class ProfileController extends Controller
 
     public function dataTransaction()
     {
-        $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)->where('paid', true)->with(
-            'transactions',
-            'ekspedisi',
-            'transactions.detailProduct',
-            'transactions.detailSize'
-        )->get();
+        $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)
+            ->where('paid', true)->with(
+                'transactions',
+                'ekspedisi',
+                'transactions.detailProduct',
+                'transactions.detailSize'
+            )->get();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,
@@ -284,12 +285,12 @@ class ProfileController extends Controller
             'transactions',
             'ekspedisi',
             'transactions.detailProduct',
-            'transactions.detailSize'
+            'transactions.detailSize',
         )->get();
         if ($data->isNotEmpty()) {
             return response()->json([
                 'success' => true,
-                'list' => $data,
+                'dataTransaksi' => $data,
             ], 200);
         } else {
             return response()->json([

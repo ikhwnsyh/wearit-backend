@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use ZipArchive;
 
 class ProductController extends Controller
 {
@@ -33,10 +34,12 @@ class ProductController extends Controller
 
     public function detailProduct($slug)
     {
-        $detailProduct = Product::where('slug', $slug)->with(['image', 'productSize', 'assets' => function ($query) {
-            $kategori_id = Auth::user()->body->kategori_id;
-            $query->where('kategori_id', $kategori_id);
-        }])->firstOrFail();
+        $detailProduct = Product::where('slug', $slug)->with(
+            ['image', 'productSize', 'assets' => function ($query) {
+                $kategori_id = Auth::user()->body->kategori_id;
+                $query->where('kategori_id', $kategori_id);
+            }]
+        )->firstOrFail();
 
         if ($detailProduct) {
             return response()->json([
@@ -111,392 +114,412 @@ class ProductController extends Controller
             }
 
             if ($request->has('asset')) {
-                foreach ($request->file('asset') as $asset) {
-                    $assetName = $asset->getClientOriginalName();
-                    $asset->move(public_path('../../wearit-frontend/public/assets/3d'), $assetName);
+                $zipFile = $request->file('asset');
 
-                    //split nama file menjadi 2
-                    $splitFileName = explode("_", $assetName, 2);
-                    $kategori = $splitFileName[0];
-                    $ukuran = $splitFileName[1];
-                    if ($kategori == 'UWPTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 1,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 2,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 3,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 4,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 5,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 6,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 7,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 8,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 9,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 10,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 11,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 12,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 13,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 14,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 15,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 16,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 17,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_S.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 18,
-                            'size_id' => $size->firstWhere('size_name', 'S')->id,
-                        ]);
-                    } elseif ($kategori == 'UWPTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 1,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 2,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 3,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 4,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 5,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 6,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 7,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 8,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 9,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 10,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 11,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 12,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 13,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 14,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 15,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 16,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 17,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_M.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 18,
-                            'size_id' => $size->firstWhere('size_name', 'M')->id,
-                        ]);
-                    } elseif ($kategori == 'UWPTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 1,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 2,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 3,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 4,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 5,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 6,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 7,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 8,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 9,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 10,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 11,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 12,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 13,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 14,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 15,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 16,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 17,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
-                    } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_L.glb') {
-                        Asset::create([
-                            'asset' => $assetName,
-                            'product_id' => $product->id,
-                            'kategori_id' => 18,
-                            'size_id' => $size->firstWhere('size_name', 'L')->id,
-                        ]);
+                // Simpan file ZIP ke direktori tujuan
+                $destinationPath = public_path('../../wearit-frontend/public/assets/3d');
+                $zipFileName = $zipFile->getClientOriginalName();
+                $zipFile->move($destinationPath, $zipFileName);
+
+                // Buka file ZIP
+                $zip = new ZipArchive;
+                $zipFilePath = $destinationPath . '/' . $zipFileName;
+                if ($zip->open($zipFilePath) === true) {
+                    // Ekstrak isi file ZIP ke direktori tujuan
+                    $extractPath = $destinationPath . '/extracted';
+                    $zip->extractTo($extractPath);
+                    $zip->close();
+
+                    // Mendapatkan daftar file yang di-unzip
+                    $extractedFiles = scandir($extractPath);
+
+                    // Loop untuk setiap file yang di-unzip
+                    foreach ($extractedFiles as $assetName) {
+                        if ($assetName !== '.' && $assetName !== '..') {
+                            // Simpan file ke dalam tabel Asset
+                            $splitFileName = explode("_", $assetName, 2);
+                            $kategori = $splitFileName[0];
+                            $ukuran = $splitFileName[1];
+                            if ($kategori == 'UWPTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 1,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 2,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 3,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 4,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 5,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 6,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 7,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 8,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 9,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 10,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 11,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 12,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 13,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 14,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 15,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 16,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 17,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_S.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 18,
+                                    'size_id' => $size->firstWhere('size_name', 'S')->id,
+                                ]);
+                            } elseif ($kategori == 'UWPTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 1,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 2,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 3,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 4,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 5,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 6,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 7,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 8,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 9,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 10,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 11,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 12,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 13,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 14,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 15,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 16,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 17,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_M.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 18,
+                                    'size_id' => $size->firstWhere('size_name', 'M')->id,
+                                ]);
+                            } elseif ($kategori == 'UWPTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 1,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'UWPB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 2,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 3,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'UWSB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 4,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 5,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'UWTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 6,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NPTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 7,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NPB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 8,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NSTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 9,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NSB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 10,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NTTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 11,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'NTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 12,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 13,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWPB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 14,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 15,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWSB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 16,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 17,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            } elseif ($kategori == 'OWTB' and $ukuran == 'UKURAN_L.glb') {
+                                Asset::create([
+                                    'asset' => $assetName,
+                                    'product_id' => $product->id,
+                                    'kategori_id' => 18,
+                                    'size_id' => $size->firstWhere('size_name', 'L')->id,
+                                ]);
+                            }
+                        }
                     }
                 }
             } else {
@@ -590,5 +613,8 @@ class ProductController extends Controller
                 'message' => 'Gagal menghapus data produk!',
             ], 201);
         }
+    }
+    public function uploadZip(Request $request)
+    {
     }
 }

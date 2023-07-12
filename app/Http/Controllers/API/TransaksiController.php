@@ -90,6 +90,7 @@ class TransaksiController extends Controller
             }
             return response()->json([
                 'success' => true,
+                'message' => 'transaksi berhasil dibuat!',
                 'data' => $transaksi,
             ], 200);
         }

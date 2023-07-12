@@ -11,7 +11,9 @@ class EkspedisiController extends Controller
 {
     public function index()
     {
-        $pickup = Transaksi::where('ekspedisi_id', Auth::id());
+        $pickup = Transaksi::whereHas('ekspedisi', function ($query) {
+            $query->where('id', Auth::id());
+        })->get();
         dd($pickup);
     }
     public function pickUp($id)

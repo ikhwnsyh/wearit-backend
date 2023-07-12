@@ -18,6 +18,6 @@ class Transaksi extends Model
 
     public function ekspedisi()
     {
-        return $this->belongsTo('App\Models\Ekspedisi');
+        return $this->belongsTo('App\Models\Ekspedisi', 'ekspedisi_id');
     }
 }

@@ -173,7 +173,6 @@ class RegistrasiController extends Controller
                 'body' => $body,
             ], 201);
         }
-
         return response()->json([
             'success' => false,
         ], 409);

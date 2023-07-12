@@ -87,7 +87,7 @@ class DashboardController extends Controller
 
     public function approveTransaction($id)
     {
-        $updateStatus = Transaksi::where('id', $id)->update([
+        $updateStatus = Transaksi::find($id)->update([
             'status_id' => 3,
         ]);
         return response()->json([
@@ -99,7 +99,7 @@ class DashboardController extends Controller
 
     public function rejectTransaction($id)
     {
-        $updateStatus = Transaksi::where('id', $id)->update([
+        $updateStatus = Transaksi::find($id)->update([
             'status_id' => 8
         ]);
         return response()->json([
