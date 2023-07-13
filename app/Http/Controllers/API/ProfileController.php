@@ -287,7 +287,6 @@ class ProfileController extends Controller
     {
         $data = Transaksi::where('user_id', Auth::user()->id)->where('paid', false)->with(
             'transactions',
-            'alamats',
             'ekspedisi',
             'transactions.detailProduct',
             'transactions.detailSize',
