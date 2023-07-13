@@ -20,4 +20,8 @@ class Detail extends Model
     {
         return $this->belongsTo('App\Models\Size', 'product_id');
     }
+    public function detailAlamat()
+    {
+        return $this->belongsTo('App\Models\Alamat', 'alamat_id');
+    }
 }

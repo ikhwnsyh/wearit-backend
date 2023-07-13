@@ -258,15 +258,18 @@ class ProfileController extends Controller
         }
     }
 
-
     public function invoice($id)
     {
-        $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)->where('id', $id)->with(
-            'transactions',
-            'ekspedisi',
-            'transactions.detailProduct',
-            'transactions.detailSize'
-        )->get()->pluck('transactions')->flatten();
+        $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)
+            ->where('id', $id)->with(
+                'transactions',
+                'transactions.detailAlamat.province',
+                'transactions.detailAlamat.kabupaten',
+                'transactions.detailAlamat.kecamatan',
+                'ekspedisi',
+                'transactions.detailProduct',
+                'transactions.detailSize'
+            )->get()->pluck('transactions')->flatten();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,
@@ -284,6 +287,7 @@ class ProfileController extends Controller
     {
         $data = Transaksi::where('user_id', Auth::user()->id)->where('paid', false)->with(
             'transactions',
+            'alamats',
             'ekspedisi',
             'transactions.detailProduct',
             'transactions.detailSize',
@@ -357,7 +361,7 @@ class ProfileController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Konsumen sudah menyelesaikan transaksi. Transaksi selesai',
+            'message' => 'Transaksi berhasil diselesaikan',
             'updated' => $updateStatus,
         ], 200);
     }

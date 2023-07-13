@@ -35,7 +35,9 @@ class CartController extends Controller
             ], 200);
         }
         if ($product) {
-            $cart = Cart::where('product_id', $product->id)->where('user_id', $user_id)->where('size_id', $request->size_id)->first();
+            $cart = Cart::where('product_id', $product->id)
+                ->where('user_id', $user_id)->where('size_id', $request->size_id)
+                ->first();
             if ($cart) {
                 if ($cart->quantity < $quantity->stock) {
                     $cart->update(['quantity' => $cart->quantity + 1]);
@@ -67,7 +69,8 @@ class CartController extends Controller
 
     public function cart()
     {
-        $dataCart = Cart::with('dataProduct', 'productSize')->where('user_id', Auth::user()->id)->get();
+        $dataCart = Cart::with('dataProduct', 'productSize')
+            ->where('user_id', Auth::user()->id)->get();
         if ($dataCart->isNotEmpty()) {
             return response()->json([
                 'success' => true,

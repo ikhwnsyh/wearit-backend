@@ -66,7 +66,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('profile/menunggu-pembayaran/{id}', [ProfileController::class, 'uploadBukti']);
         Route::post('store-bukti', [ProfileController::class, 'storeBukti']);
 
-        Route::put('finished/{id}', [ProfileController::class, 'finished']);
+        Route::put('selesai/{id}', [ProfileController::class, 'finished']);
 
         Route::get('beli-langsung', [TransaksiController::class, 'beli']);
         Route::post('bayar', [TransaksiController::class, 'bayar']);
