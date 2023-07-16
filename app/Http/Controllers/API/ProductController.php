@@ -115,6 +115,7 @@ class ProductController extends Controller
 
             if ($request->has('asset')) {
                 $zipFile = $request->file('asset');
+
                 // Simpan file ZIP ke direktori tujuan
                 $destinationPath = public_path('../../wearit-frontend/public/assets/3d');
                 $zipFileName = $zipFile->getClientOriginalName();
