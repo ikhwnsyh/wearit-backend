@@ -45,12 +45,12 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'detailProduct'    => $detailProduct,
-            ], 201);
+            ], 200);
         } else {
             return response()->json([
                 'success' => false,
                 'message' => "maaf data tidak ditemukan!",
-            ], 201);
+            ], 204);
         }
     }
 
@@ -115,10 +115,9 @@ class ProductController extends Controller
 
             if ($request->has('asset')) {
                 $zipFile = $request->file('asset');
-
                 // Simpan file ZIP ke direktori tujuan
                 $destinationPath = public_path('../../wearit-frontend/public/assets/3d');
-                $zipFileName = $zipFile->getClientOriginalName();
+                $zipFileName = Str::random(6) . '_' . $zipFile->getClientOriginalName();
                 $zipFile->move($destinationPath, $zipFileName);
 
                 // Buka file ZIP
@@ -613,8 +612,5 @@ class ProductController extends Controller
                 'message' => 'Gagal menghapus data produk!',
             ], 201);
         }
-    }
-    public function uploadZip(Request $request)
-    {
     }
 }

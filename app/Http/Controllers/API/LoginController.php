@@ -17,8 +17,8 @@ class LoginController extends Controller
     public function __invoke(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'email'     => 'required',
-            'password'  => 'required'
+            'email'     => 'required|email',
+            'password'  => 'required|min:8'
         ]);
 
         //if validation fails

@@ -116,12 +116,12 @@ class ProfileController extends Controller
         $updateUser->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->passworrd),
+            'password' => bcrypt($request->password),
         ]);
         return response()->json([
             'success' => true,
             'message' => "data diri berhasil diupdate!",
-            'updated_user' => $updateUser->first(),
+            'updated_user' => $updateUser,
         ], 200);
     }
 
@@ -243,7 +243,8 @@ class ProfileController extends Controller
                 'ekspedisi',
                 'transactions.detailProduct',
                 'transactions.detailSize'
-            )->get()->pluck('transactions')->flatten();
+            )->get();
+        $data = $dataTransaksi->toArray();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,

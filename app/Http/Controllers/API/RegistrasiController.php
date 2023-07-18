@@ -25,7 +25,7 @@ class RegistrasiController extends Controller
                 //rules untuk account
                 'name'      => 'required',
                 'email'     => 'required|email|unique:users',
-                'password'  => 'required|min:8|confirmed',
+                'password'  => 'required|between:8,20|confirmed',
                 'handphone' => 'required|numeric|min:11',
                 //rules untuk alamat
                 'alamat'      => 'required',
@@ -33,8 +33,8 @@ class RegistrasiController extends Controller
                 'regency_id' => 'required',
                 'district_id' => 'required',
                 //rules untuk body
-                'tinggi_badan'      => 'required|numeric|min:140|max:200',
-                'berat_badan'      => 'required|numeric|min:35|max:100',
+                'tinggi_badan'      => 'required|numeric|between:140,200',
+                'berat_badan'      => 'required|numeric|between:35,100',
                 'lingkar_perut' => 'required|numeric',
             ],
             [
@@ -68,7 +68,6 @@ class RegistrasiController extends Controller
         } elseif ($countBMI >= 30) {
             $kategoriBMI = 'obesitas';
         }
-
         //hitung waist circumference
         $obesitasCentral = false;
         $waist = $request->lingkar_perut;
@@ -80,7 +79,7 @@ class RegistrasiController extends Controller
         $kategoriTinggi = '';
         if ($height > 170) {
             $kategoriTinggi = 'tinggi';
-        } elseif ($height > 160 && $height <= 170) {
+        } elseif ($height >= 160 && $height <= 170) {
             $kategoriTinggi = 'sedang';
         } elseif ($height < 160) {
             $kategoriTinggi = 'pendek';
@@ -128,7 +127,7 @@ class RegistrasiController extends Controller
             return response()->json([
                 'success' => false,
                 'message'    => "Maaf kategori BMI obesitas belum tersedia! ",
-            ], 201);
+            ], 200);
         }
         //create user
         $user = User::create([
@@ -146,22 +145,14 @@ class RegistrasiController extends Controller
             'district_id' => $request->district_id,
         ]);
 
-        $checkData = Body::where('user_id', $user->id)->count();
-        if ($checkData == 0) {
-            $body = Body::create([
-                'tinggi_badan'      => $height,
-                'kategori_id' => $kategoriTubuh,
-                'berat_badan'      => $weight,
-                'lingkar_perut' => $waist,
-                'user_id' => $user->id,
+        $body = Body::create([
+            'tinggi_badan'      => $height,
+            'kategori_id' => $kategoriTubuh,
+            'berat_badan'      => $weight,
+            'lingkar_perut' => $waist,
+            'user_id' => $user->id,
 
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => "Gagal. Anda sudah pernah mengisi data tubuh!",
-            ], 200);
-        }
+        ]);
 
         if ($body and $alamat) {
             User::where('id', $user->id)->update(['completed' => true]);
@@ -173,8 +164,5 @@ class RegistrasiController extends Controller
                 'body' => $body,
             ], 201);
         }
-        return response()->json([
-            'success' => false,
-        ], 409);
     }
 }

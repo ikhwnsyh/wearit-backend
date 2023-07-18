@@ -27,7 +27,6 @@ class CartController extends Controller
         $user_id = Auth::id();
         $product = Product::find($request->product_id);
         $quantity =  Size::find($request->size_id);
-
         if ($quantity->stock == 0) {
             return response()->json([
                 'success' => false,
@@ -35,30 +34,37 @@ class CartController extends Controller
             ], 200);
         }
         if ($product) {
-            $cart = Cart::where('product_id', $product->id)
-                ->where('user_id', $user_id)->where('size_id', $request->size_id)
-                ->first();
-            if ($cart) {
-                if ($cart->quantity < $quantity->stock) {
-                    $cart->update(['quantity' => $cart->quantity + 1]);
+            if (Size::where('id', $quantity->id)->where('product_id', $product->id)->first()) {
+                $cart = Cart::where('product_id', $product->id)
+                    ->where('user_id', $user_id)->where('size_id', $request->size_id)
+                    ->first();
+                if ($cart) {
+                    if ($cart->quantity < $quantity->stock) {
+                        $cart->update(['quantity' => $cart->quantity + 1]);
+                    } else {
+                        return response()->json([
+                            'success' => false,
+                            'pesan' => "Jumlah barang pada kerjanjang anda sudah melebihi stock yang kami punya!",
+                        ], 200);
+                    }
                 } else {
-                    return response()->json([
-                        'success' => false,
-                        'pesan' => "Jumlah barang pada kerjanjang anda sudah melebihi stock yang kami punya!",
-                    ], 200);
+                    Cart::create([
+                        'user_id' => $user_id,
+                        'product_id' => $product->id,
+                        'quantity' => 1,
+                        'size_id' => $request->size_id
+                    ]);
                 }
+                return response()->json([
+                    'success' => true,
+                    'pesan' => "succsess add to cart!",
+                ], 201);
             } else {
-                Cart::create([
-                    'user_id' => $user_id,
-                    'product_id' => $product->id,
-                    'quantity' => 1,
-                    'size_id' => $request->size_id
-                ]);
+                return response()->json([
+                    'success' => false,
+                    'pesan' => "Size tidak ditemukan!",
+                ], 404);
             }
-            return response()->json([
-                'success' => true,
-                'pesan' => "succsess add to cart!",
-            ], 201);
         } else {
             return response()->json([
                 'success' => false,
