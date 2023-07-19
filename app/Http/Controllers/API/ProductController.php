@@ -72,7 +72,6 @@ class ProductController extends Controller
                 'product_name.unique' => 'Gagal menambahkan produk. Produk sudah tersedia!'
             ]
         );
-
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -20,23 +21,26 @@ class LoginControllerTest extends TestCase
     }
     public function test_authIsWrong()
     {
+        $user = User::factory()->make();
         $this->withoutExceptionHandling();
         $response = $this->post('/api/login', [
-            'email' => 'konsumen@wearit.com',
+            'email' =>  $user->email,
             'password' => 'password-salah'
         ]);
-        $response->assertStatus(401);
+        $response->assertStatus(401)
+            ->assertSee('Email atau Password Anda salah');
     }
 
     public function test_loginUserSuccess()
     {
+        $user = User::factory()->create();
         $response = $this->post('/api/login', [
-            'email' => 'konsumen@wearit.com',
-            'password' => 'konsumen123'
+            'email' => $user->email,
+            'password' => 'password',
         ]);
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertSee('Login berhasil!');
     }
-
     public function testWrongFormatEmail()
     {
         $response = $this->post('/api/login', [

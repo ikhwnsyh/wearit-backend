@@ -27,48 +27,55 @@ class CartController extends Controller
         $user_id = Auth::id();
         $product = Product::find($request->product_id);
         $quantity =  Size::find($request->size_id);
-        if ($quantity->stock == 0) {
-            return response()->json([
-                'success' => false,
-                'pesan' => "Stock barang 0. Gagal menambahkan barang ke cart!",
-            ], 200);
-        }
-        if ($product) {
-            if (Size::where('id', $quantity->id)->where('product_id', $product->id)->first()) {
-                $cart = Cart::where('product_id', $product->id)
-                    ->where('user_id', $user_id)->where('size_id', $request->size_id)
-                    ->first();
-                if ($cart) {
-                    if ($cart->quantity < $quantity->stock) {
-                        $cart->update(['quantity' => $cart->quantity + 1]);
-                    } else {
-                        return response()->json([
-                            'success' => false,
-                            'pesan' => "Jumlah barang pada kerjanjang anda sudah melebihi stock yang kami punya!",
-                        ], 200);
-                    }
-                } else {
-                    Cart::create([
-                        'user_id' => $user_id,
-                        'product_id' => $product->id,
-                        'quantity' => 1,
-                        'size_id' => $request->size_id
-                    ]);
-                }
+        if ($quantity) {
+            if ($quantity->stock == 0) {
                 return response()->json([
-                    'success' => true,
-                    'pesan' => "succsess add to cart!",
-                ], 201);
+                    'success' => false,
+                    'pesan' => "Stock barang 0. Gagal menambahkan barang ke cart!",
+                ], 200);
+            }
+            if ($product) {
+                if (Size::where('id', $quantity->id)->where('product_id', $product->id)->first()) {
+                    $cart = Cart::where('product_id', $product->id)
+                        ->where('user_id', $user_id)->where('size_id', $request->size_id)
+                        ->first();
+                    if ($cart) {
+                        if ($cart->quantity < $quantity->stock) {
+                            $cart->update(['quantity' => $cart->quantity + 1]);
+                        } else {
+                            return response()->json([
+                                'success' => false,
+                                'pesan' => "Jumlah barang pada keranjang anda sudah melebihi stock yang kami punya!",
+                            ], 200);
+                        }
+                    } else {
+                        Cart::create([
+                            'user_id' => $user_id,
+                            'product_id' => $product->id,
+                            'quantity' => 1,
+                            'size_id' => $request->size_id
+                        ]);
+                    }
+                    return response()->json([
+                        'success' => true,
+                        'pesan' => "succsess add to cart!",
+                    ], 201);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'pesan' => "Size tidak ditemukan!",
+                    ], 404);
+                }
             } else {
                 return response()->json([
                     'success' => false,
-                    'pesan' => "Size tidak ditemukan!",
+                    'pesan' => "Product tidak ditemukan!",
                 ], 404);
             }
         } else {
             return response()->json([
                 'success' => false,
-                'pesan' => "Product tidak ditemukan!",
+                'pesan' => "Size tidak ditemukan!",
             ], 404);
         }
     }
@@ -77,6 +84,14 @@ class CartController extends Controller
     {
         $dataCart = Cart::with('dataProduct', 'productSize')
             ->where('user_id', Auth::user()->id)->get();
+        foreach ($dataCart as  $checkStock) {
+            $stock = Size::where('id', $checkStock->size_id)->first();
+            if ($checkStock->quantity >  $stock->stock); {
+                $checkStock->update([
+                    'quantity' => $stock->stock,
+                ]);
+            }
+        }
         if ($dataCart->isNotEmpty()) {
             return response()->json([
                 'success' => true,

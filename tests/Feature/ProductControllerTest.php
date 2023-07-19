@@ -2,9 +2,11 @@
 
 namespace Tests\Feature;
 
+use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -51,18 +53,27 @@ class ProductControllerTest extends TestCase
             'email' => 'admin@wearit.com',
             'password' => 'admin123'
         ]);
+        $images = [];
+        for ($i = 1; $i <= 2; $i++) {
+            $images[] = UploadedFile::fake()->image("image{$i}.jpg");
+        }
+        $zipFilePath = storage_path('image/image.zip');
+
+        // Simulasikan file upload dengan menggunakan UploadedFile::fake()
+        $zipFile = UploadedFile::fake()->createWithContent('file.zip', file_get_contents($zipFilePath));
+
         $storeProduct = $this->post('/api/dashboard/tambah-product', [
             'token' => $auth['token'],
-            'product_name' => 'Baju polos biru',
+            'product_name' => 'Baju polos bisa bisa anj',
             'description' => 'lorem ipsum dalang mana',
             'price' => 100000,
             'stock_s' => 10,
             'stock_m' => 3,
             'stock_l' => 2,
-            'image' => 'https://source.unsplash.com/random',
-            'asset' => 'https://source.unsplash.com/random',
+            'image' =>  $images,
+            'asset' => $zipFile,
         ]);
-        dd($storeProduct);
+        $storeProduct->assertStatus(201);
     }
 
     public function test_createProductFailed()

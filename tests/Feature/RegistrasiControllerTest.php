@@ -16,19 +16,21 @@ class RegistrasiControllerTest extends TestCase
      *
      * @return void
      */
+
     public function test_dataIsRequired()
     {
-        $response = $this->post('/api/register');
+        $response = $this->post('/api/register'); //form tidak diisi
         $response->assertStatus(422);
     }
 
     public function test_invalidCredential()
     {
+        $user = User::factory()->make();
         $register = $this->post('api/register', [
-            'email' => 'schmitt.tillman@example.net', //email sudah digunakan. email harus unique
-            'name' => 'Konsumen',
-            'password' => 'konsumen123',
-            'password_confirmation' => 'konsumen123',
+            'email' => $user->email,
+            'name' => $user->name,
+            'password' => 'password-berbeda', //password berbeda dengan confirm pasword
+            'password_confirmation' => 'password',
             'gender' => 'pria',
             'handphone' => 4124124142,
             'alamat' => 'komplek bdn',
@@ -42,7 +44,7 @@ class RegistrasiControllerTest extends TestCase
         $register->assertStatus(422);
     }
 
-    public function test_validRegistration()
+    public function test_validRegistration() //registrasi berhasil
     {
         $user = User::factory()->make();
         $register = $this->post('api/register', [
@@ -60,10 +62,11 @@ class RegistrasiControllerTest extends TestCase
             'berat_badan' => 60,
             'lingkar_perut' => 100,
         ]);
-        $register->assertStatus(201);
+        $register->assertStatus(201)
+            ->assertSee('Registrasi berhasil!');
     }
 
-    public function test_regitrationObesitas()
+    public function test_regitrationObesitas() //registrasi gagal karena bmi obestias
     {
         $user = User::factory()->make();
         $register = $this->post('api/register', [
@@ -81,6 +84,7 @@ class RegistrasiControllerTest extends TestCase
             'berat_badan' => 90,
             'lingkar_perut' => 90,
         ]);
-        $register->assertStatus(200);
+        $register->assertStatus(200)
+            ->assertSee('Maaf kategori BMI obesitas belum tersedia!');
     }
 }

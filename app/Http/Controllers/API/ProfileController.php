@@ -144,6 +144,29 @@ class ProfileController extends Controller
 
     public function updateDataTubuh(Request $request)
     {
+        $validator = Validator::make(
+            $request->all(),
+            [
+                //rules untuk body
+                'tinggi_badan'      => 'required|numeric|min:140|max:200',
+                'berat_badan'      => 'required|numeric|min:35|max:100',
+                'lingkar_perut' => 'required|numeric',
+            ],
+            [
+                'tinggi_badan.min' => 'Minimal tinggi badan adalah 140 cm!',
+                'tinggi_badan.max' => 'Maximal tinggi badan adalah 200 cm!',
+                'berat_badan.min' => 'Minimal berat badan adalah 35 kg!',
+                'berat_badan.max' => 'Maximal berat badan adalah 100 kg!',
+                'handphone.numeric' => 'No. telfon tidak valid!',
+                'handphone.min' => 'No. telfon tidak valid!. Digit kurang!'
+            ],
+        );
+
+        //if validation fails
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
         $data = Auth::user()->body;
         $weight = $request->berat_badan;
         $height = $request->tinggi_badan;
@@ -219,7 +242,7 @@ class ProfileController extends Controller
             return response()->json([
                 'success' => false,
                 'message'    => "Maaf kategori BMI obesitas belum tersedia! ",
-            ], 201);
+            ], 200);
         }
 
         $update = Body::where('id', $data->id)->update([
@@ -231,7 +254,7 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => "data tubuh berhasil diupdate!",
-            'data_tubuh' => $data,
+            'data_tubuh' => $update,
         ], 200);
     }
 
@@ -244,7 +267,7 @@ class ProfileController extends Controller
                 'transactions.detailProduct',
                 'transactions.detailSize'
             )->get();
-        $data = $dataTransaksi->toArray();
+
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,

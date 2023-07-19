@@ -80,7 +80,7 @@ class DashboardController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => "Tidak ada data transaksi dengan status $slug"
+                'message' => "Tidak ada data transaksi dengan status"
             ], 200);
         }
     }
@@ -92,7 +92,7 @@ class DashboardController extends Controller
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Produk berhasil diapprove. Status transaksi menjadi sedang diproses',
+            'message' => 'Transaksi berhasil diapprove. Status transaksi menjadi sedang diproses',
             'updated' => $updateStatus,
         ], 200);
     }

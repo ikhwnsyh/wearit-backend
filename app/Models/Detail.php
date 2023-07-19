@@ -18,7 +18,7 @@ class Detail extends Model
 
     public function detailSize()
     {
-        return $this->belongsTo('App\Models\Size', 'product_id');
+        return $this->belongsTo('App\Models\Size', 'size_id');
     }
     public function detailAlamat()
     {
