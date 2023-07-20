@@ -85,11 +85,5 @@ Route::middleware('auth:api')->group(function () {
 
         Route::put('approved/{id}', [DashboardController::class, 'approveTransaction']);
         Route::put('rejected/{id}', [DashboardController::class, 'rejectTransaction']);
-        Route::put('requestPickup/{id}', [DashboardController::class, 'requestPickup']);
-    });
-    Route::middleware('kurir')->group(function () {
-        Route::put('pickUp/{id}', [EkspedisiController::class, 'pickUp']);
-        Route::put('finished/{id}', [EkspedisiController::class, 'finished']);
-        Route::get('dashboard-kurir', [EkspedisiController::class, 'index']);
     });
 });

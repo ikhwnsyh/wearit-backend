@@ -124,7 +124,7 @@ class ProductController extends Controller
                 $zipFilePath = $destinationPath . '/' . $zipFileName;
                 if ($zip->open($zipFilePath) === true) {
                     // Ekstrak isi file ZIP ke direktori tujuan
-                    $extractPath = $destinationPath . '/extracted';
+                    $extractPath = $destinationPath . '/extracted' . ' ' .  $request->product_name;
                     $zip->extractTo($extractPath);
                     $zip->close();
 
