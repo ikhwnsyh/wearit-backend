@@ -86,10 +86,13 @@ class CartController extends Controller
             ->where('user_id', Auth::user()->id)->get();
         foreach ($dataCart as  $checkStock) {
             $stock = Size::where('id', $checkStock->size_id)->first();
-            if ($checkStock->quantity >  $stock->stock); {
+            if ($checkStock->quantity >  $stock->stock) {
+
                 $checkStock->update([
                     'quantity' => $stock->stock,
                 ]);
+            } else {
+                $checkStock;
             }
         }
         if ($dataCart->isNotEmpty()) {

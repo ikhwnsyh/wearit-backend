@@ -58,6 +58,7 @@ class RegistrasiController extends Controller
         $heightMeter = $height / 100;
         $countBMI = $weight / ($heightMeter * $heightMeter);
 
+        //menentukan bmi 
         $kategoriBMI = '';
         if ($countBMI < 18.5) {
             $kategoriBMI = 'underweight';

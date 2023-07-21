@@ -309,12 +309,13 @@ class ProfileController extends Controller
     }
     public function listToWait()
     {
-        $data = Transaksi::where('user_id', Auth::user()->id)->where('paid', false)->with(
-            'transactions',
-            'ekspedisi',
-            'transactions.detailProduct',
-            'transactions.detailSize',
-        )->get();
+        $data = Transaksi::where('user_id', Auth::user()->id)
+            ->where('paid', false)->with(
+                'transactions',
+                'ekspedisi',
+                'transactions.detailProduct',
+                'transactions.detailSize',
+            )->get();
         if ($data->isNotEmpty()) {
             return response()->json([
                 'success' => true,
@@ -352,8 +353,10 @@ class ProfileController extends Controller
             return response()->json($validator->errors(), 422);
         }
         if ($request->has('bukti_pembayaran')) {
-            $imageName = Str::random(6) . '-' . $request->bukti_pembayaran->getClientOriginalName();
-            $buktiImage =  $request->bukti_pembayaran->move(public_path('../../wearit-frontend/public/assets/bukti'), $imageName);
+            $imageName = Str::random(6) . '-' . $request->bukti_pembayaran
+                ->getClientOriginalName();
+            $buktiImage =  $request->bukti_pembayaran
+                ->move(public_path('../../wearit-frontend/public/assets/bukti'), $imageName);
             $bayar = Bukti::create([
                 'bukti_pembayaran' => $imageName,
                 'transaksi_id' => $request->transaksi_id,
@@ -367,12 +370,12 @@ class ProfileController extends Controller
                     'success' => true,
                     'message' => "Bukti pembayaran berhasil diupload!",
                 ], 200);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => "Gambar belum dimasukkan!"
+                ], 409);
             }
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => "Gambar belum dimasukkan!"
-            ], 409);
         }
     }
 

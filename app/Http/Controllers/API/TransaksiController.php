@@ -63,7 +63,9 @@ class TransaksiController extends Controller
         ]);
         if ($transaksi) {
             foreach ($product_id as $index => $product) {
-                if (Size::where('id', $size_id[$index])->first()->stock >= $quantity[$index]) {
+                if (Size::where('id', $size_id[$index])
+                    ->first()->stock >= $quantity[$index]
+                ) {
                     Detail::create([
                         'alamat_id' => $request->alamat_id,
                         'transaksi_id' => $transaksi->id,
