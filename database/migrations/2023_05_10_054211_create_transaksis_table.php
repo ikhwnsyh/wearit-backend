@@ -17,6 +17,7 @@ return new class extends Migration
             $table->uuid('id');
             $table->integer('user_id');
             $table->integer('alamat_id');
+            $table->string('bukti_pembayaran')->nullable();
             $table->integer('ekspedisi_id');
             $table->integer('status_id');
             $table->integer('final_price');

@@ -358,25 +358,21 @@ class ProfileController extends Controller
                 ->getClientOriginalName();
             $buktiImage =  $request->bukti_pembayaran
                 ->move(public_path('../../wearit-frontend/public/assets/bukti'), $imageName);
-            $bayar = Bukti::create([
+
+            Transaksi::where('id', $request->transaksi_id)->update([
+                'status_id' => 2,
                 'bukti_pembayaran' => $imageName,
-                'transaksi_id' => $request->transaksi_id,
+                'paid' => true,
             ]);
-            if ($bayar) {
-                Transaksi::where('id', $request->transaksi_id)->update([
-                    'status_id' => 2,
-                    'paid' => true,
-                ]);
-                return response()->json([
-                    'success' => true,
-                    'message' => "Bukti pembayaran berhasil diupload!",
-                ], 200);
-            } else {
-                return response()->json([
-                    'success' => false,
-                    'message' => "Gambar belum dimasukkan!"
-                ], 409);
-            }
+            return response()->json([
+                'success' => true,
+                'message' => "Bukti pembayaran berhasil diupload!",
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => "Gambar belum dimasukkan!"
+            ], 409);
         }
     }
 

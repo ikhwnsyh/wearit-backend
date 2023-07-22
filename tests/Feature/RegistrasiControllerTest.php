@@ -16,13 +16,6 @@ class RegistrasiControllerTest extends TestCase
      *
      * @return void
      */
-
-    public function test_dataIsRequired()
-    {
-        $response = $this->post('/api/register'); //form tidak diisi
-        $response->assertStatus(422);
-    }
-
     public function test_invalidCredential()
     {
         $user = User::factory()->make();

@@ -39,7 +39,7 @@ class ProductController extends Controller
                 $kategori_id = Auth::user()->body->kategori_id;
                 $query->where('kategori_id', $kategori_id);
             }]
-        )->firstOrFail();
+        )->first();
         if ($detailProduct) {
             return response()->json([
                 'success' => true,
@@ -49,7 +49,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => "maaf data tidak ditemukan!",
-            ], 204);
+            ], 200);
         }
     }
 

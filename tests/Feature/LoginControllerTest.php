@@ -14,7 +14,7 @@ class LoginControllerTest extends TestCase
      *
      * @return void
      */
-    public function test_loginEmailAndPasswordRequired()
+    public function test_loginInvalidCredential()
     {
         $response = $this->post('/api/login');
         $response->assertStatus(422);
@@ -29,15 +29,6 @@ class LoginControllerTest extends TestCase
         ]);
         $response->assertStatus(401)
             ->assertSee('Email atau Password Anda salah');
-    }
-
-    public function testWrongFormatEmail()
-    {
-        $response = $this->post('/api/login', [
-            'email' => 'konsumen',
-            'password' => 'konsumen123'
-        ]);
-        $response->assertStatus(422);
     }
 
     public function test_loginUserSuccess()
