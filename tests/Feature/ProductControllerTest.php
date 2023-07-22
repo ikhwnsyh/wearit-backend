@@ -64,7 +64,7 @@ class ProductControllerTest extends TestCase
 
         $storeProduct = $this->post('/api/dashboard/tambah-product', [
             'token' => $auth['token'],
-            'product_name' => 'Baju polos bisa bisa anj',
+            'product_name' => fake()->word(),
             'description' => 'lorem ipsum dalang mana',
             'price' => 100000,
             'stock_s' => 10,

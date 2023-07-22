@@ -64,7 +64,7 @@ class CartControllerTest extends TestCase
         $storeCart = $this->post('/api/cart', [
             'product_id' => 1,
             'quantity' => 1,
-            'size_id' => 1,
+            'size_id' => 2,
         ]);
         $storeCart->assertStatus(201)->assertSee('succsess add to cart!');
     }
@@ -80,10 +80,10 @@ class CartControllerTest extends TestCase
             'quantity' => 1,
             'size_id' => 1,
         ]);
+
         $storeCart->assertStatus(200)
             ->assertSee('Jumlah barang pada keranjang anda sudah melebihi stock yang kami punya!');
     }
-
 
     public function test_sizeProductNotFound()
     {
@@ -108,7 +108,7 @@ class CartControllerTest extends TestCase
             'password' => 'konsumen123'
         ]);
         $storeCart = $this->post('/api/cart', [
-            'product_id' => 20,
+            'product_id' => 200,
             'quantity' => 2,
             'size_id' => 4,
         ]);
@@ -133,10 +133,11 @@ class CartControllerTest extends TestCase
     }
     public function test_deleteUserCart()
     {
+        $user = User::factory()->create();
         $this->withoutExceptionHandling();
         $auth = $this->post('/api/login', [
-            'email' => 'konsumen@wearit.com',
-            'password' => 'konsumen123'
+            'email' => $user->email,
+            'password' => 'password'
         ]);
 
         $delete = $this->delete('/api/hapus-cart');

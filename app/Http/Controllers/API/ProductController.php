@@ -40,7 +40,6 @@ class ProductController extends Controller
                 $query->where('kategori_id', $kategori_id);
             }]
         )->firstOrFail();
-
         if ($detailProduct) {
             return response()->json([
                 'success' => true,
@@ -124,7 +123,7 @@ class ProductController extends Controller
                 $zipFilePath = $destinationPath . '/' . $zipFileName;
                 if ($zip->open($zipFilePath) === true) {
                     // Ekstrak isi file ZIP ke direktori tujuan
-                    $extractPath = $destinationPath . '/extracted' . ' ' .  $request->product_name;
+                    $extractPath = $destinationPath . '/extracted' . ' ' .  Str::slug($request->product_name);
                     $zip->extractTo($extractPath);
                     $zip->close();
 

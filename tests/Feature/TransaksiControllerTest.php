@@ -52,7 +52,6 @@ class TransaksiControllerTest extends TestCase
 
     public function test_getDataTransactionMenungguPembayaran()
     {
-
         $this->withoutExceptionHandling();
         $user = User::factory()->create();
         $auth = $this->post('/api/login', [
@@ -96,7 +95,6 @@ class TransaksiControllerTest extends TestCase
             'email' => 'konsumen@wearit.com',
             'password' => 'konsumen123'
         ]);
-        $alamat = Alamat::where('user_id', $response['user']['id'])->first();
         $transaksi = Transaksi::factory()->create([
             'user_id' => $response['user']['id'], //kondisi tidak memilih ukuran produk
             'paid' => false,
@@ -105,7 +103,27 @@ class TransaksiControllerTest extends TestCase
         $transaksi->assertStatus(422);
     }
 
-
+    public function test_invalidTransactionOverQuantity()
+    {
+        $this->withoutExceptionHandling();
+        $response = $this->post('/api/login', [
+            'email' => 'konsumen@wearit.com',
+            'password' => 'konsumen123'
+        ]);
+        $alamat = Alamat::where('user_id', $response['user']['id'])->first();
+        $product_ids = [1, 2];
+        $transaksi = $this->post('/api/bayar', [
+            'user_id' => $response['user']['id'],
+            'quantity' => [1, 2],
+            'size_id' => 1,
+            'product_id' => $product_ids,
+            'final_price' => 20000,
+            'ekspedisi_id' => 1,
+            'alamat_id' => 1,
+        ]);
+        dd($transaksi);
+        // $transaksi->assertStatus(200)->assertSee('kuantitas pada produk melebihi stok tersedia');
+    }
     public function test_adminGetAllTransaction()
     {
         $auth = $this->post('/api/login', [
@@ -185,18 +203,5 @@ class TransaksiControllerTest extends TestCase
         $transaksi = Transaksi::factory()->create(['user_id' => $user->id, 'status_id' => 2]);
         $response = $this->put('api/rejected/' . $transaksi->id);
         $response->assertStatus(200)->assertSee('Bukti tidak valid. Status pesanan menjadi dibatalkan!');
-    }
-
-    public function test_requestPickUp()
-    {
-        $this->withoutExceptionHandling();
-        $auth = $this->post('/api/login', [
-            'email' => 'admin@wearit.com',
-            'password' => 'admin123'
-        ]);
-        $user = User::factory()->create();
-        $transaksi = Transaksi::factory()->create(['user_id' => $user->id, 'status_id' => 3]);
-        $response = $this->put('api/requestPickup/' . $transaksi->id);
-        $response->assertStatus(200)->assertSee('Status updated! Paket sedang menunggu pickup dari pihak kurir');
     }
 }

@@ -21,7 +21,7 @@ class ProfileControllerTest extends TestCase
             'email' => 'konsumen@wearit.com',
             'password' => 'konsumen123'
         ]);
-        $dataDiri = $this->get('/api/profile', []);
+        $dataDiri = $this->get('/api/profile');
         $dataDiri->assertStatus(200);
     }
 
@@ -29,13 +29,13 @@ class ProfileControllerTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $auth = $this->post('/api/login', [
-            'email' => 'lebsack.deja@example.org',
+            'email' => 'konsumen@wearit.com',
             'password' => 'konsumen123'
         ]);
         $newData = User::factory()->make();
         $updateDataDiri = $this->put('/api/update-profile', [
             'name' => $newData->name,
-            'email' => 'lebsack.deja@example.org',
+            'email' => 'konsumen@wearit.com',
             'password' => 'konsumen123',
             'password_confirmation' => 'konsumen123',
         ]);

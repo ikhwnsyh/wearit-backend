@@ -100,7 +100,7 @@ class DashboardController extends Controller
     public function rejectTransaction($id)
     {
         $updateStatus = Transaksi::find($id)->update([
-            'status_id' => 8
+            'status_id' => 6
         ]);
         return response()->json([
             'success' => true,
@@ -108,15 +108,14 @@ class DashboardController extends Controller
             'updated' => $updateStatus,
         ], 200);
     }
-    public function requestPickup($id)
+    public function sent($id)
     {
         $updateStatus =  Transaksi::where('id', $id)->update([
             'status_id' => 4
         ]);
         return response()->json([
             'success' => true,
-            'message' => 'Status updated! Paket sedang menunggu pickup dari pihak kurir',
-            'updated' => $updateStatus,
+            'message' => 'Barang sedang dikirim menuju alamat!',
         ], 200);
     }
 }

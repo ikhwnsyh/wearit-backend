@@ -42,7 +42,8 @@ class ProfileController extends Controller
 
     public function editAddress($id)
     {
-        $detailAddress = Alamat::where('id', $id)->with('province', 'kabupaten', 'kecamatan')->first();
+        $detailAddress = Alamat::where('id', $id)
+            ->with('province', 'kabupaten', 'kecamatan')->first();
         return response()->json([
             'success' => true,
             'detail_alamat' => $detailAddress,
@@ -121,7 +122,6 @@ class ProfileController extends Controller
         return response()->json([
             'success' => true,
             'message' => "data diri berhasil diupdate!",
-            'updated_user' => $updateUser,
         ], 200);
     }
 
@@ -263,6 +263,7 @@ class ProfileController extends Controller
         $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)
             ->where('paid', true)->with(
                 'transactions',
+                'statusName',
                 'ekspedisi',
                 'transactions.detailProduct',
                 'transactions.detailSize'
@@ -287,13 +288,14 @@ class ProfileController extends Controller
         $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)
             ->where('id', $id)->with(
                 'transactions',
+                'statusName',
                 'transactions.detailAlamat.province',
                 'transactions.detailAlamat.kabupaten',
                 'transactions.detailAlamat.kecamatan',
                 'ekspedisi',
                 'transactions.detailProduct',
                 'transactions.detailSize'
-            )->get()->pluck('transactions')->flatten();
+            )->get();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,

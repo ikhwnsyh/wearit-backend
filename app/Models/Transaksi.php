@@ -20,4 +20,9 @@ class Transaksi extends Model
     {
         return $this->belongsTo('App\Models\Ekspedisi', 'ekspedisi_id');
     }
+
+    public function statusName()
+    {
+        return $this->belongsTo('App\Models\Status', 'status_id');
+    }
 }

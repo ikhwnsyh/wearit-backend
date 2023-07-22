@@ -36,10 +36,10 @@ Route::get('getKabupaten/{id}', [AlamatController::class, 'kabupaten']);
 Route::get('getKecamatan/{id}', [AlamatController::class, 'kecamatan']);
 Route::get('getKelurahan/{id}', [AlamatController::class, 'kelurahan']);
 
+Route::get('/index', [ProductController::class, 'index']);
 
 Route::middleware('auth:api')->group(function () {
     Route::middleware('konsumen')->group(function () {
-        Route::get('/index', [ProductController::class, 'index']);
         Route::get('product/{slug}', [ProductController::class, 'detailProduct']);
 
         Route::get('cart', [CartController::class, 'cart']);
@@ -85,5 +85,6 @@ Route::middleware('auth:api')->group(function () {
 
         Route::put('approved/{id}', [DashboardController::class, 'approveTransaction']);
         Route::put('rejected/{id}', [DashboardController::class, 'rejectTransaction']);
+        Route::put('sent/{id}', [DashboardController::class, 'sent']);
     });
 });
