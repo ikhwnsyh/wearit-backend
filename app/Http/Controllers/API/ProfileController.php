@@ -287,14 +287,14 @@ class ProfileController extends Controller
     {
         $dataTransaksi = Transaksi::where('user_id', Auth::user()->id)
             ->where('id', $id)->with(
-                'transactions',
-                'transactions.detailAlamat.province',
-                'transactions.detailAlamat.kabupaten',
-                'transactions.detailAlamat.kecamatan',
+                'userAddress.province',
+                'userAddress.kabupaten',
+                'userAddress.kecamatan',
                 'ekspedisi',
+                'transactions',
                 'transactions.detailProduct',
                 'transactions.detailSize'
-            )->get()->pluck('transactions')->flatten();
+            )->get()->pluck('transactions', 'userAddress')->flatten();
         if ($dataTransaksi->isNotEmpty()) {
             return response()->json([
                 'success' => true,

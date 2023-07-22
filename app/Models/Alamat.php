@@ -16,7 +16,6 @@ class Alamat extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-
     public function province()
     {
         return $this->belongsTo('App\Models\Province', 'province_id');

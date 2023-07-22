@@ -31,6 +31,15 @@ class LoginControllerTest extends TestCase
             ->assertSee('Email atau Password Anda salah');
     }
 
+    public function testWrongFormatEmail()
+    {
+        $response = $this->post('/api/login', [
+            'email' => 'konsumen',
+            'password' => 'konsumen123'
+        ]);
+        $response->assertStatus(422);
+    }
+
     public function test_loginUserSuccess()
     {
         $user = User::factory()->create();
@@ -40,13 +49,5 @@ class LoginControllerTest extends TestCase
         ]);
         $response->assertStatus(200)
             ->assertSee('Login berhasil!');
-    }
-    public function testWrongFormatEmail()
-    {
-        $response = $this->post('/api/login', [
-            'email' => 'konsumen',
-            'password' => 'konsumen123'
-        ]);
-        $response->assertStatus(422);
     }
 }

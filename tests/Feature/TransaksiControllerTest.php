@@ -112,9 +112,10 @@ class TransaksiControllerTest extends TestCase
         ]);
         $alamat = Alamat::where('user_id', $response['user']['id'])->first();
         $product_ids = [1, 2];
+        $quantity = [1, 2];
         $transaksi = $this->post('/api/bayar', [
             'user_id' => $response['user']['id'],
-            'quantity' => [1, 2],
+            'quantity' => $quantity,
             'size_id' => 1,
             'product_id' => $product_ids,
             'final_price' => 20000,

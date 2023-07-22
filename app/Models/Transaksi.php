@@ -25,4 +25,13 @@ class Transaksi extends Model
     {
         return $this->belongsTo('App\Models\Status', 'status_id');
     }
+
+    public function userTransaction()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id');
+    }
+    public function userAddress()
+    {
+        return $this->belongsTo('App\Models\Alamat', 'alamat_id');
+    }
 }
