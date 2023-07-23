@@ -28,19 +28,6 @@ class CartControllerTest extends TestCase
         $cart = $this->get('/api/cart');
         $cart->assertStatus(200);
     }
-
-    public function test_getUserCartQuantityExceed()  //kalo semisal di cart kuantitas ada 3, tp total stock cuma ada 2, nah itu automatis update
-    {
-        $this->withoutExceptionHandling();
-        $auth = $this->post('/api/login', [
-            'email' => 'konsumen@wearit.com',
-            'password' => 'konsumen123'
-        ]);
-        $cart = $this->get('/api/cart');
-        $cart->assertStatus(200);
-    }
-
-
     public function test_userCartNull()
     {
         $this->withoutExceptionHandling();
@@ -52,6 +39,22 @@ class CartControllerTest extends TestCase
 
         $cartNull = $this->get('/api/cart');
         $cartNull->assertStatus(200)->assertSee('Keranjang kosong. Anda belum memasukkan barang ke keranjang!');
+    }
+    public function test_getUserCartWithAuthentication()
+    {
+        $this->withoutExceptionHandling();
+        $cart = $this->get('/api/cart');
+        $cart->assertStatus(404);
+    }
+    public function test_getUserCartQuantityExceed()  //kalo semisal di cart kuantitas ada 3, tp total stock cuma ada 2, nah itu automatis update
+    {
+        $this->withoutExceptionHandling();
+        $auth = $this->post('/api/login', [
+            'email' => 'konsumen@wearit.com',
+            'password' => 'konsumen123'
+        ]);
+        $cart = $this->get('/api/cart');
+        $cart->assertStatus(200);
     }
 
     public function test_storeProductToCart()
@@ -68,6 +71,31 @@ class CartControllerTest extends TestCase
         ]);
         $storeCart->assertStatus(201)->assertSee('succsess add to cart!');
     }
+
+
+    public function test_invalidStoreProductToCart()
+    {
+        $this->withoutExceptionHandling();
+        $auth = $this->post('/api/login', [
+            'email' => 'konsumen@wearit.com',
+            'password' => 'konsumen123'
+        ]);
+        $storeCart = $this->post('/api/cart', [
+            'product_id' => 1,
+            'quantity' => 1,
+        ]);
+        $storeCart->assertStatus(422);
+    }
+    public function test_storeProductToCartWithoutAuthentication()
+    {
+        $this->withoutExceptionHandling();
+        $storeCart = $this->post('/api/cart', [
+            'product_id' => 1,
+            'quantity' => 1,
+            'size_id' => 2,
+        ]);
+        $storeCart->assertStatus(401);
+    }
     public function test_quantityExceedStock()
     {
         $this->withoutExceptionHandling();
@@ -78,7 +106,7 @@ class CartControllerTest extends TestCase
         $storeCart = $this->post('/api/cart', [
             'product_id' => 1,
             'quantity' => 1,
-            'size_id' => 1,
+            'size_id' => 3,
         ]);
 
         $storeCart->assertStatus(200)
@@ -108,12 +136,12 @@ class CartControllerTest extends TestCase
             'password' => 'konsumen123'
         ]);
         $storeCart = $this->post('/api/cart', [
-            'product_id' => 200,
+            'product_id' => 6,
             'quantity' => 2,
-            'size_id' => 4,
+            'size_id' => 1,
         ]);
         $storeCart->assertStatus(404)
-            ->assertSee('Product tidak ditemukan!');
+            ->assertSee('product tidak ditemukan!');
     }
 
 
@@ -127,7 +155,7 @@ class CartControllerTest extends TestCase
         $storeCart = $this->post('/api/cart', [
             'product_id' => 1,
             'quantity' => 2,
-            'size_id' => 3,
+            'size_id' => 1,
         ]);
         $storeCart->assertStatus(200)->assertSee('Stock barang 0. Gagal menambahkan barang ke cart');
     }

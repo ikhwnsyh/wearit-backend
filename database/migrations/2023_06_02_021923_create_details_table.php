@@ -20,8 +20,6 @@ return new class extends Migration
             $table->integer('size_id');
             $table->integer('quantity');
             $table->integer('price');
-            $table->timestamp('transaction_date');
-            $table->timestamp('end_transaction')->nullable();
             $table->timestamps();
         });
     }

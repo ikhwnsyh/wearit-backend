@@ -39,7 +39,7 @@ class ProfileControllerTest extends TestCase
             'password' => 'konsumen123',
             'password_confirmation' => 'konsumen123',
         ]);
-        $updateDataDiri->assertStatus(200);
+        $updateDataDiri->assertStatus(200)->assertSee('data diri berhasil diupdate!');
     }
 
     public function test_invaliCredentialdUpdateDataDiri()
@@ -81,7 +81,7 @@ class ProfileControllerTest extends TestCase
             'berat_badan' => 42,
             'lingkar_perut' => 91,
         ]);
-        $updateDataDiri->assertStatus(200);
+        $updateDataDiri->assertStatus(200)->assertSee('data tubuh berhasil diupdate!');
     }
 
     public function test_invalidCredentialUpdateDatatTubuh()
@@ -110,6 +110,6 @@ class ProfileControllerTest extends TestCase
             'berat_badan' => 90,
             'lingkar_perut' => 90,
         ]);
-        $updateDataDiri->assertStatus(200);
+        $updateDataDiri->assertStatus(200)->assertSee('Maaf kategori BMI obesitas belum tersedia!');
     }
 }

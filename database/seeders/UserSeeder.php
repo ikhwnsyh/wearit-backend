@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             'gender' => 'pria',
             'handphone' => 235234534,
             'is_admin' => false,
-            'is_kurir' => true
+            'is_kurir' => false
         ]);
 
         Alamat::create([

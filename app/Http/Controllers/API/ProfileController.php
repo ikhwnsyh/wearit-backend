@@ -44,17 +44,23 @@ class ProfileController extends Controller
     {
         $detailAddress = Alamat::where('id', $id)
             ->with('province', 'kabupaten', 'kecamatan')->first();
-        return response()->json([
-            'success' => true,
-            'detail_alamat' => $detailAddress,
-        ], 200);
+        if ($detailAddress) {
+            return response()->json([
+                'success' => true,
+                'detail_alamat' => $detailAddress,
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'data alamat tidak ditemukan!'
+            ], 200);
+        }
     }
 
     public function updateAddress(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'alamat'      => 'required|unique:alamats',
-
+            'alamat'      => 'required'
         ]);
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
@@ -339,9 +345,16 @@ class ProfileController extends Controller
             'transactions.detailProduct',
             'transactions.detailSize'
         )->first();
+        if ($data) {
+            return response()->json([
+                'success' => true,
+                'detailTransaksi' => $data,
+            ], 200);
+        }
         return response()->json([
-            'success' => true,
-            'detailTransaksi' => $data,
+            'success' => false,
+            'detailTransaksi' => null,
+            'pesan' => 'data transaksi menunggu pembayaran tidak ditemukan',
         ], 200);
     }
     public function storeBukti(Request $request)

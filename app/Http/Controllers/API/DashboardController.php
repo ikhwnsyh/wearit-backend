@@ -42,12 +42,12 @@ class DashboardController extends Controller
             return response()->json([
                 'success' => true,
                 'product'    => $product,
-            ], 201);
+            ], 200);
         } else {
             return response()->json([
                 'success' => false,
                 'message' => 'data produk kosong!',
-            ], 201);
+            ], 200);
         }
     }
 
@@ -77,7 +77,8 @@ class DashboardController extends Controller
             'userAddress.province',
             'userAddress.kabupaten',
             'userAddress.kecamatan',
-            'transactions.detailProduct'
+            'transactions.detailProduct',
+            'transactions.detailSize',
         )->get();
         if ($data->isNotEmpty()) {
             return response()->json([

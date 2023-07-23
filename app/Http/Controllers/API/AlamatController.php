@@ -76,7 +76,7 @@ class AlamatController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'alamat'      => 'required',
+            'alamat'      => 'required|unique:alamats,alamat,' . Auth::user()->id,
             'province_id' => 'required',
             'regency_id'      => 'required',
             'district_id' => 'required',
@@ -95,6 +95,6 @@ class AlamatController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Alamat berhasil ditambahakan!',
-        ], 200);
+        ], 201);
     }
 }

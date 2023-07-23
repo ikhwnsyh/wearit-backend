@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StatusSeeder::class,
             IndoRegionSeeder::class,
+            TransaksiSeeder::class,
         ]);
     }
 }

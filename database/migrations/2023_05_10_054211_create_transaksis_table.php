@@ -22,6 +22,8 @@ return new class extends Migration
             $table->integer('status_id');
             $table->integer('final_price');
             $table->boolean('paid');
+            $table->timestamp('transaction_date');
+            $table->timestamp('end_transaction')->nullable();
             $table->timestamps();
         });
     }

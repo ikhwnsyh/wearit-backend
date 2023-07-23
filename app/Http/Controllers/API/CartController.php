@@ -27,14 +27,15 @@ class CartController extends Controller
         $user_id = Auth::id();
         $product = Product::find($request->product_id);
         $quantity =  Size::find($request->size_id);
-        if ($quantity) {
-            if ($quantity->stock == 0) {
-                return response()->json([
-                    'success' => false,
-                    'pesan' => "Stock barang 0. Gagal menambahkan barang ke cart!",
-                ], 200);
-            }
-            if ($product) {
+        if ($product) {
+            if ($quantity) {
+                if ($quantity->stock == 0) {
+                    return response()->json([
+                        'success' => false,
+                        'pesan' => "Stock barang 0. Gagal menambahkan barang ke cart!",
+                    ], 200);
+                }
+
                 if (Size::where('id', $quantity->id)->where('product_id', $product->id)->first()) {
                     $cart = Cart::where('product_id', $product->id)
                         ->where('user_id', $user_id)->where('size_id', $request->size_id)
@@ -69,13 +70,13 @@ class CartController extends Controller
             } else {
                 return response()->json([
                     'success' => false,
-                    'pesan' => "Product tidak ditemukan!",
+                    'pesan' => "Size tidak ditemukan!",
                 ], 404);
             }
         } else {
             return response()->json([
                 'success' => false,
-                'pesan' => "Size tidak ditemukan!",
+                'pesan' => "product tidak ditemukan!",
             ], 404);
         }
     }

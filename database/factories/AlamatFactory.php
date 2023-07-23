@@ -17,6 +17,7 @@ class AlamatFactory extends Factory
     public function definition()
     {
         return [
+            'user_id' => 3,
             'alamat' => fake()->address(),
             'province_id' => 11,
             'regency_id' => 1101,

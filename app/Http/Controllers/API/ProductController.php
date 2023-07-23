@@ -589,7 +589,7 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Data produk berhasil diupdate!',
-            ], 201);
+            ], 200);
         }
         return response()->json([
             'success' => false,
@@ -603,12 +603,12 @@ class ProductController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'produk berhasil dihapus!',
-            ], 201);
+            ], 200);
         } else {
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal menghapus data produk!',
-            ], 201);
+            ], 200);
         }
     }
 }
