@@ -7,7 +7,6 @@ use App\Models\Asset;
 use App\Models\Image;
 use App\Models\Product;
 use App\Models\Size;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -19,7 +18,7 @@ class ProductController extends Controller
 
     public function index()
     {
-        $produk = User::all();
+        $produk = Product::all();
         if ($produk->isNotEmpty()) {
             return response()->json([
                 'success' => true,
