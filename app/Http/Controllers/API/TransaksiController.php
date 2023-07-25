@@ -71,7 +71,6 @@ class TransaksiController extends Controller
                         'product_id' => $product,
                         'size_id' => $size_id[$index],
                         'price' => $request->price,
-
                         'quantity' => $quantity[$index],
                     ]);
                     $updateStock = Size::where('id', $size_id[$index])->first();
