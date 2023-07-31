@@ -77,7 +77,7 @@ class ProductController extends Controller
         $product = Product::create([
             'product_name'      => $request->product_name,
             'description'      => $request->description,
-            'slug'      => Str::slug($request->product_name),
+            'slug'      => Str::random(6)  . '_' . Str::slug($request->product_name),
             'price'      => $request->price,
 
         ]);
