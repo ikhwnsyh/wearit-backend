@@ -57,14 +57,13 @@ class RegistrasiController extends Controller
         $height = $request->tinggi_badan;
         $heightMeter = $height / 100;
         $countBMI = $weight / ($heightMeter * $heightMeter);
-
         //menentukan bmi 
         $kategoriBMI = '';
-        if ($countBMI < 18.5) {
+        if ($countBMI < 18.555) {
             $kategoriBMI = 'underweight';
-        } elseif ($countBMI >= 18.5 && $countBMI <= 24.9) {
+        } elseif ($countBMI >= 18.555 && $countBMI <= 24.999) {
             $kategoriBMI = 'normal';
-        } elseif ($countBMI >= 25 && $countBMI <= 29.9) {
+        } elseif ($countBMI >= 25 && $countBMI <= 29.999) {
             $kategoriBMI = 'overweight';
         } elseif ($countBMI >= 30) {
             $kategoriBMI = 'obesitas';
