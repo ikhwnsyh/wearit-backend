@@ -16,6 +16,7 @@ class DashboardController extends Controller
         $menungguPembayaran = Transaksi::where('status_id', 1)->count();
         $menungguApprove = Transaksi::where('status_id', 2)->count();
         $sedangDiproses = Transaksi::where('status_id', 3)->count();
+        $transaksiReadFalse = Transaksi::where('status_id', 2)->where('read', false)->count();
         $pendapatan = Transaksi::where('paid', true)
             ->with('transactions')
             ->get()
@@ -31,7 +32,8 @@ class DashboardController extends Controller
             'diproses' => $sedangDiproses,
             'menunggu' => $menungguPembayaran,
             'approve' => $menungguApprove,
-            'product' => $totalProduct
+            'product' => $totalProduct,
+            'transaksiIsNotRead ' => $transaksiReadFalse
         ], 200);
     }
 

@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use ZipArchive;
@@ -18,6 +19,8 @@ class ProductController extends Controller
 
     public function index()
     {
+        // $produk = DB::table('products')->get();
+        // $produk = DB::select('select * FROM products where id= 1');
         $produk = Product::all();
         if ($produk->isNotEmpty()) {
             return response()->json([

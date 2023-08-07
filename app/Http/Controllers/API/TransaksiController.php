@@ -98,4 +98,23 @@ class TransaksiController extends Controller
             'success' => false,
         ], 422);
     }
+
+    public function read()
+    {
+        $data = Transaksi::where('status_id', 2)->where('read', false)->get();
+        if ($data->isNotEmpty()) {
+            foreach ($data as $datas) {
+                $datas->update(['read' => true]);
+            }
+            return response()->json([
+                'success' => true,
+                'message' => 'read true',
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'transaksi sudah dibaca semua',
+            ], 200);
+        }
+    }
 }

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', LoginController::class);
 Route::post('/register', RegistrasiController::class);
 
-Route::get('getProvinsi', [AlamatController::class, 'provinsi'])->name('provinsi.index');
+Route::get('getProvinsi', [AlamatController::class, 'provinsi']);
 Route::get('getKabupaten/{id}', [AlamatController::class, 'kabupaten']);
 Route::get('getKecamatan/{id}', [AlamatController::class, 'kecamatan']);
 Route::get('getKelurahan/{id}', [AlamatController::class, 'kelurahan']);
@@ -50,7 +50,7 @@ Route::middleware('auth:api')->group(function () {
         Route::get('profile/edit', [ProfileController::class, 'profile']);
         Route::put('update-profile', [ProfileController::class, 'updateProfile']);
 
-        Route::get('profile/alamat', [ProfileController::class, 'showAddress']);
+        Route::get('profile/alamat', [ProfileController::class, 'showddress']);
         Route::post('profile/tambah-alamat', [AlamatController::class, 'store']);
         Route::get('profile/edit-alamat/{id}', [ProfileController::class, 'editAddress']);
         Route::put('update-alamat/{id}', [ProfileController::class, 'updateAddress']);
@@ -86,5 +86,7 @@ Route::middleware('auth:api')->group(function () {
         Route::put('approved/{id}', [DashboardController::class, 'approveTransaction']);
         Route::put('rejected/{id}', [DashboardController::class, 'rejectTransaction']);
         Route::put('sent/{id}', [DashboardController::class, 'sent']);
+
+        Route::put('read', [TransaksiController::class, 'read']);
     });
 });
