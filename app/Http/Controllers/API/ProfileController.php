@@ -200,7 +200,7 @@ class ProfileController extends Controller
         $kategoriTinggi = '';
         if ($height > 170) {
             $kategoriTinggi = 'tinggi';
-        } elseif ($height > 160 && $height <= 170) {
+        } elseif ($height >= 160 && $height <= 170) {
             $kategoriTinggi = 'sedang';
         } elseif ($height < 160) {
             $kategoriTinggi = 'pendek';

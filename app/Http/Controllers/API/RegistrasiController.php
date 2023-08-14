@@ -136,6 +136,7 @@ class RegistrasiController extends Controller
             'handphone' => $request->handphone,
             'password'  => bcrypt($request->password),
             'gender' => "Pria",
+            'is_admin'
         ]);
         $alamat = Alamat::create([
             'user_id' => $user->id,
